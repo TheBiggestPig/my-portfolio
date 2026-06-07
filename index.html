@@ -7,38 +7,83 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet">
 <style>
+/* --- BASIC STYLES --- */
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Nunito',sans-serif;background:#fffdf7;color:#1a1a1a;min-height:100vh}
 header{padding:2rem 2rem 1rem;text-align:center}
 .logo{font-family:'Fredoka One',cursive;font-size:2.4rem;color:#1a1a1a}
 .logo .dot{color:#ff6b6b}
 .tagline{font-size:0.85rem;font-weight:700;color:#555;letter-spacing:0.1em;text-transform:uppercase;margin-top:0.3rem}
+
 .color-strip{display:flex;height:6px;border-radius:99px;overflow:hidden;margin:1rem 2rem 0}
 .color-strip div{flex:1}
+
 .filter-row{display:flex;gap:0.5rem;padding:1.2rem 2rem;flex-wrap:wrap;justify-content:center}
 .filter-btn{font-family:'Nunito',sans-serif;font-size:0.78rem;font-weight:800;padding:0.45rem 1.2rem;border-radius:99px;cursor:pointer;border:2px solid #3a3a3a;background:#fffdf7;color:#3a3a3a;transition:all 0.18s;text-transform:uppercase}
-.filter-btn:hover{background:#3a3a3a;color:#fff}
-.filter-btn.active{background:#3a3a3a;color:#fff}
+.filter-btn:hover, .filter-btn.active{background:#3a3a3a;color:#fff}
+
+/* Active Tag Colors */
 .filter-btn.active[data-filter="character"]{background:#e6a800;border-color:#e6a800}
 .filter-btn.active[data-filter="background"]{background:#00a87a;border-color:#00a87a}
 .filter-btn.active[data-filter="concept"]{background:#7c5fe6;border-color:#7c5fe6}
-.filter-btn.active[data-filter="comic"]{background:#e05c00;border-color:#e05c00}
+
 .count-badge{text-align:center;font-size:0.78rem;font-weight:700;color:#888;letter-spacing:0.08em;text-transform:uppercase;padding:0 2rem 0.8rem}
+
+/* --- GALLERY GRID --- */
 .gallery {display: grid;grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));gap: 1.5rem;padding: 0.5rem 2rem 3rem;}
 .card{border-radius:16px;overflow:hidden;cursor:pointer;border:2.5px solid #ece8df;transition:transform 0.2s,box-shadow 0.2s;position:relative;background:#f0ece3; aspect-ratio: 16/9;}
 .card:hover{transform:translateY(-5px);box-shadow:0 10px 25px rgba(0,0,0,0.1)}
 .card img{width:100%; height:100%; display:block; object-fit:cover}
-.card-overlay{position:absolute;inset:0;background:rgba(255,253,245,0.94);opacity:0;transition:opacity 0.2s;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px}
+
+/* FIX: pointer-events:none stops the flickering on edges */
+.card-overlay{position:absolute;inset:0;background:rgba(255,253,245,0.94);opacity:0;transition:opacity 0.2s;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;pointer-events:none}
 .card:hover .card-overlay{opacity:1}
 .card-name{font-family:'Fredoka One',cursive;font-size:1.1rem;color:#1a1a1a;text-align:center;padding:0 10px}
-.lb-wrap{background:#fffdf7;display:none;align-items:center;justify-content:center;flex-direction:column;gap:1rem;padding:2rem;border-top:2.5px solid #ece8df;min-height:450px}
-.lb-wrap.open{display:flex}
-.lb-img-box{border-radius:20px;overflow:hidden;border:3px solid #ece8df;max-width:100%;max-height:70vh}
-.lb-img-box img{max-width:100%;max-height:70vh;display:block}
-.lb-title{font-family:'Fredoka One',cursive;font-size:1.6rem}
-.lb-nav{display:flex;gap:1rem}
-.lb-btn{font-weight:800;padding:0.6rem 1.5rem;border-radius:99px;cursor:pointer;border:none;background:#3a3a3a;color:#fff}
-.lb-close-btn{background:#ff6b6b}
+
+/* --- POPUP LIGHTBOX (MODAL) --- */
+.lb-wrap{
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.9); /* Dark background */
+    display: none; /* Hidden by default */
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    z-index: 9999;
+    padding: 20px;
+}
+.lb-wrap.open{display: flex;}
+
+.lb-img-box{
+    position: relative;
+    max-width: 90%;
+    max-height: 80vh;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 0 30px rgba(0,0,0,0.5);
+    background: #000;
+}
+.lb-img-box img{
+    max-width: 100%;
+    max-height: 80vh;
+    display: block;
+    object-fit: contain;
+}
+
+.lb-info-box {
+    text-align: center;
+    margin-top: 15px;
+    color: #fff;
+}
+.lb-title{font-family:'Fredoka One',cursive;font-size:1.8rem; margin-bottom: 8px;}
+
+.lb-nav{display:flex;gap:1rem; margin-top: 20px;}
+.lb-btn{font-weight:800;padding:0.7rem 1.6rem;border-radius:99px;cursor:pointer;border:none;background:#fff;color:#000; transition: 0.2s;}
+.lb-btn:hover{transform: scale(1.05); background: #eee;}
+.lb-close-btn{background:#ff6b6b; color: #fff;}
+.lb-close-btn:hover{background: #ff4f4f;}
+
 .pill{font-size:0.65rem;font-weight:900;padding:3px 10px;border-radius:99px;color:#fff;text-transform:uppercase}
 .tag-character{background:#e6a800}
 .tag-background{background:#00a87a}
@@ -70,10 +115,17 @@ header{padding:2rem 2rem 1rem;text-align:center}
 <div class="count-badge" id="count-badge">Gallery</div>
 <div class="gallery" id="gallery"></div>
 
+<!-- POPUP VIEWER -->
 <div class="lb-wrap" id="lb-wrap">
-  <div class="lb-img-box"><img id="lb-img" src="" alt=""></div>
-  <div class="lb-title" id="lb-title"></div>
-  <div id="lb-pill-box" style="display:flex;gap:5px"></div>
+  <div class="lb-img-box" id="lb-box">
+    <img id="lb-img" src="" alt="">
+  </div>
+  
+  <div class="lb-info-box">
+    <div class="lb-title" id="lb-title"></div>
+    <div id="lb-pill-box" style="display:flex;gap:5px;justify-content:center"></div>
+  </div>
+
   <div class="lb-nav">
     <button class="lb-btn" id="lb-prev">← Prev</button>
     <button class="lb-btn lb-close-btn" id="lb-close">Close</button>
@@ -151,13 +203,30 @@ function openLb(i){
   lbImg.src=w.src; lbTitle.textContent=w.name;
   lbPills.innerHTML = w.tags.map(t => `<span class="pill tag-${t}">${t}</span>`).join('');
   lbWrap.classList.add('open');
-  lbWrap.scrollIntoView({behavior:'smooth',block:'start'});
+  document.body.style.overflow = 'hidden'; // Stop background scrolling
 }
 
-function closeLb(){lbWrap.classList.remove('open')}
+function closeLb(){
+    lbWrap.classList.remove('open');
+    document.body.style.overflow = 'auto'; // Enable scrolling again
+}
+
+// Close if clicking the dark area
+lbWrap.addEventListener('click', (e) => {
+    if (e.target === lbWrap) closeLb();
+});
+
 document.getElementById('lb-close').addEventListener('click',closeLb);
-document.getElementById('lb-prev').addEventListener('click',()=>{idx=(idx-1+filtered.length)%filtered.length;openLb(idx)});
-document.getElementById('lb-next').addEventListener('click',()=>{idx=(idx+1)%filtered.length;openLb(idx)});
+document.getElementById('lb-prev').addEventListener('click',(e)=>{ e.stopPropagation(); idx=(idx-1+filtered.length)%filtered.length; openLb(idx); });
+document.getElementById('lb-next').addEventListener('click',(e)=>{ e.stopPropagation(); idx=(idx+1)%filtered.length; openLb(idx); });
+
+// Keyboard support
+document.addEventListener('keydown', (e) => {
+    if (!lbWrap.classList.contains('open')) return;
+    if (e.key === "Escape") closeLb();
+    if (e.key === "ArrowLeft") { idx=(idx-1+filtered.length)%filtered.length; openLb(idx); }
+    if (e.key === "ArrowRight") { idx=(idx+1)%filtered.length; openLb(idx); }
+});
 
 document.querySelectorAll('.filter-btn').forEach(btn => {
   btn.addEventListener('click', () => {
@@ -180,6 +249,7 @@ document.querySelectorAll('.filter-btn').forEach(btn => {
     render();
   });
 });
+
 render();
 </script>
 </body>
