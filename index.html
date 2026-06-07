@@ -5,208 +5,345 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BigOne — 2D Artist Portfolio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Fredoka+One&display=swap" rel="stylesheet">
 <style>
-/* --- BASIC STYLES --- */
+:root {
+    --bg: #fcfaf2;
+    --card-bg: #ffffff;
+    --accent: #ff6b6b;
+    --char: #e6a800;
+    --bg-tag: #00a87a;
+    --con: #7c5fe6;
+    --text: #2d3436;
+}
+
+/* --- GLOBAL SETUP --- */
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Nunito',sans-serif;background:#fffdf7;color:#1a1a1a;min-height:100vh}
-header{padding:2rem 2rem 1rem;text-align:center}
-.logo{font-family:'Fredoka One',cursive;font-size:2.4rem;color:#1a1a1a}
-.logo .dot{color:#ff6b6b}
-.tagline{font-size:0.85rem;font-weight:700;color:#555;letter-spacing:0.1em;text-transform:uppercase;margin-top:0.3rem}
+body {
+    font-family: 'Nunito', sans-serif;
+    background-color: var(--bg);
+    background-image: radial-gradient(#e8e4d8 1px, transparent 1px);
+    background-size: 40px 40px; /* Subtle grid texture */
+    color: var(--text);
+    overflow-x: hidden;
+}
 
-.color-strip{display:flex;height:6px;border-radius:99px;overflow:hidden;margin:1rem 2rem 0}
-.color-strip div{flex:1}
+header {
+    padding: 4rem 2rem 2rem;
+    text-align: center;
+}
 
-.filter-row{display:flex;gap:0.5rem;padding:1.2rem 2rem;flex-wrap:wrap;justify-content:center}
-.filter-btn{font-family:'Nunito',sans-serif;font-size:0.78rem;font-weight:800;padding:0.45rem 1.2rem;border-radius:99px;cursor:pointer;border:2px solid #3a3a3a;background:#fffdf7;color:#3a3a3a;transition:all 0.18s;text-transform:uppercase}
-.filter-btn:hover, .filter-btn.active{background:#3a3a3a;color:#fff}
+.logo {
+    font-family: 'Fredoka One', cursive;
+    font-size: 3.5rem;
+    color: var(--text);
+    letter-spacing: -1px;
+    margin-bottom: 0.5rem;
+}
 
-.filter-btn.active[data-filter="character"]{background:#e6a800;border-color:#e6a800}
-.filter-btn.active[data-filter="background"]{background:#00a87a;border-color:#00a87a}
-.filter-btn.active[data-filter="concept"]{background:#7c5fe6;border-color:#7c5fe6}
+.logo .dot { color: var(--accent); }
 
-.count-badge{text-align:center;font-size:0.78rem;font-weight:700;color:#888;letter-spacing:0.08em;text-transform:uppercase;padding:0 2rem 0.8rem}
+.tagline {
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+}
 
-/* --- GALLERY GRID --- */
-.gallery {display: grid;grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));gap: 1.5rem;padding: 0.5rem 2rem 3rem;}
+/* --- DECORATIVE STRIP --- */
+.color-strip {
+    display: flex;
+    height: 4px;
+    width: 200px;
+    margin: 1.5rem auto;
+    border-radius: 99px;
+    overflow: hidden;
+    opacity: 0.6;
+}
+.color-strip div { flex: 1; }
 
-/* The Card hit-box stays perfectly still to prevent flickering */
+/* --- FILTERS --- */
+.filter-row {
+    display: flex;
+    gap: 0.8rem;
+    padding: 1rem 2rem 3rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.filter-btn {
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 800;
+    padding: 0.6rem 1.4rem;
+    border-radius: 99px;
+    cursor: pointer;
+    border: 2px solid #eee;
+    background: white;
+    color: #666;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+}
+
+.filter-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.05);
+    border-color: #ddd;
+}
+
+.filter-btn.active {
+    background: var(--text);
+    color: white;
+    border-color: var(--text);
+}
+
+/* Custom Active Colors */
+.filter-btn.active[data-filter="character"] { background: var(--char); border-color: var(--char); }
+.filter-btn.active[data-filter="background"] { background: var(--bg-tag); border-color: var(--bg-tag); }
+.filter-btn.active[data-filter="concept"] { background: var(--con); border-color: var(--con); }
+
+/* --- MASONRY GALLERY --- */
+.gallery {
+    columns: 3;
+    column-gap: 1.5rem;
+    padding: 0 4rem 4rem;
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+@media(max-width: 1100px) { .gallery { columns: 2; padding: 0 2rem 2rem; } }
+@media(max-width: 600px) { .gallery { columns: 1; padding: 0 1.5rem 1.5rem; } }
+
 .card {
-    border-radius:16px;
-    overflow:hidden;
-    cursor:pointer;
-    border:2.5px solid #ece8df;
-    position:relative;
-    background:#f0ece3; 
-    aspect-ratio: 16/9;
-    /* This ensures the card container NEVER moves */
-    transform: translateZ(0); 
+    break-inside: avoid;
+    margin-bottom: 1.5rem;
+    border-radius: 20px;
+    overflow: hidden;
+    cursor: zoom-in;
+    background: var(--card-bg);
+    border: 1px solid rgba(0,0,0,0.05);
+    position: relative;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.03);
 }
 
 .card img {
-    width:100%; height:100%; 
-    display:block; 
-    object-fit:cover;
-    transition: transform 0.4s cubic-bezier(0.2, 1, 0.3, 1);
-    will-change: transform;
+    width: 100%;
+    display: block;
+    transition: transform 0.6s ease;
 }
 
-/* On hover, we only zoom the image, we don't move the card container */
-.card:hover img {
-    transform: scale(1.08);
+.card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.08);
 }
+
+.card:hover img { transform: scale(1.03); }
 
 .card-overlay {
-    position:absolute;
-    inset:0;
-    background:rgba(255,253,245,0.85);
-    opacity:0;
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 60%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 1.5rem;
+    opacity: 0;
     transition: opacity 0.3s ease;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    gap:8px;
-    pointer-events:none; /* Mouse "sees through" this layer */
-    z-index: 2;
+    pointer-events: none;
 }
 
-.card:hover .card-overlay {
-    opacity:1;
+.card:hover .card-overlay { opacity: 1; }
+
+.card-name {
+    color: white;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.1rem;
+    transform: translateY(10px);
+    transition: transform 0.3s ease;
 }
 
-.card-name{font-family:'Fredoka One',cursive;font-size:1.1rem;color:#1a1a1a;text-align:center;padding:0 10px}
+.card:hover .card-name { transform: translateY(0); }
 
-/* --- POPUP LIGHTBOX (MODAL) --- */
-.lb-wrap{
+/* --- LIGHTBOX --- */
+.lb-wrap {
     position: fixed;
     top: 0; left: 0;
     width: 100%; height: 100%;
-    background: rgba(0,0,0,0.92);
+    background: rgba(252, 250, 242, 0.85);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
     display: none;
     align-items: center;
     justify-content: center;
-    flex-direction: column;
-    z-index: 9999;
-    padding: 20px;
-    backdrop-filter: blur(4px);
+    z-index: 1000;
 }
-.lb-wrap.open{display: flex;}
 
-.lb-img-box{
-    position: relative;
-    max-width: 95%;
-    max-height: 75vh;
+.lb-wrap.open { display: flex; animation: fadeIn 0.3s ease forwards; }
+
+.lb-content {
+    max-width: 90%;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.lb-img-box {
+    box-shadow: 0 30px 60px rgba(0,0,0,0.2);
     border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 0 40px rgba(0,0,0,0.6);
-    background: #000;
+    background: white;
+    line-height: 0;
 }
-.lb-img-box img{
+
+.lb-img-box img {
     max-width: 100%;
     max-height: 75vh;
-    display: block;
     object-fit: contain;
 }
 
-.lb-info-box { text-align: center; margin-top: 20px; color: #fff; }
-.lb-title{font-family:'Fredoka One',cursive;font-size:1.8rem; margin-bottom: 8px;}
+.lb-info {
+    margin-top: 1.5rem;
+    text-align: center;
+}
 
-.lb-nav{display:flex;gap:1rem; margin-top: 25px;}
-.lb-btn{font-weight:800;padding:0.7rem 1.6rem;border-radius:99px;cursor:pointer;border:none;background:#fff;color:#000; transition: 0.2s;}
-.lb-btn:hover{transform: translateY(-2px); background: #f0f0f0;}
-.lb-close-btn{background:#ff6b6b; color: #fff;}
-.lb-close-btn:hover{background: #ff4f4f;}
+.lb-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 2rem;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+}
 
-.pill{font-size:0.65rem;font-weight:900;padding:3px 10px;border-radius:99px;color:#fff;text-transform:uppercase}
-.tag-character{background:#e6a800}
-.tag-background{background:#00a87a}
-.tag-concept{background:#7c5fe6}
+.lb-nav {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.lb-btn {
+    background: var(--text);
+    color: white;
+    border: none;
+    padding: 0.8rem 1.8rem;
+    border-radius: 99px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.lb-btn:hover { opacity: 0.9; transform: scale(1.05); }
+.lb-btn.close { background: var(--accent); }
+
+.pill {
+    font-size: 0.7rem;
+    font-weight: 800;
+    padding: 4px 12px;
+    border-radius: 99px;
+    color: white;
+    text-transform: uppercase;
+}
+.tag-character { background: var(--char); }
+.tag-background { background: var(--bg-tag); }
+.tag-concept { background: var(--con); }
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.count-badge {
+    text-align: center;
+    font-weight: 800;
+    color: #bbb;
+    letter-spacing: 0.1em;
+    margin-bottom: 2rem;
+    font-size: 0.8rem;
+}
 </style>
 </head>
 <body>
 
 <header>
-  <div class="logo">BigOne<span class="dot">.</span></div>
-  <div class="tagline">2D Artist &nbsp;·&nbsp; Portfolio</div>
+    <div class="logo">BigOne<span class="dot">.</span></div>
+    <div class="tagline">Visual Storyteller &nbsp;•&nbsp; 2D Artist</div>
+    <div class="color-strip">
+        <div style="background:#ff6b6b"></div>
+        <div style="background:#e6a800"></div>
+        <div style="background:#00a87a"></div>
+        <div style="background:#7c5fe6"></div>
+    </div>
 </header>
 
-<div class="color-strip">
-  <div style="background:#ff6b6b"></div>
-  <div style="background:#e6a800"></div>
-  <div style="background:#06d6a0"></div>
-  <div style="background:#7c5fe6"></div>
-  <div style="background:#e05c00"></div>
-</div>
-
 <div class="filter-row">
-  <button class="filter-btn active" data-filter="all">All</button>
-  <button class="filter-btn" data-filter="character">Characters</button>
-  <button class="filter-btn" data-filter="background">Backgrounds</button>
-  <button class="filter-btn" data-filter="concept">Concepts</button>
+    <button class="filter-btn active" data-filter="all">All Works</button>
+    <button class="filter-btn" data-filter="character">Characters</button>
+    <button class="filter-btn" data-filter="background">Environments</button>
+    <button class="filter-btn" data-filter="concept">Concepts</button>
 </div>
 
-<div class="count-badge" id="count-badge">Gallery</div>
+<div class="count-badge" id="count-badge">---</div>
+
 <div class="gallery" id="gallery"></div>
 
-<!-- POPUP VIEWER -->
+<!-- LIGHTBOX -->
 <div class="lb-wrap" id="lb-wrap">
-  <div class="lb-img-box" id="lb-box">
-    <img id="lb-img" src="" alt="">
-  </div>
-  
-  <div class="lb-info-box">
-    <div class="lb-title" id="lb-title"></div>
-    <div id="lb-pill-box" style="display:flex;gap:5px;justify-content:center"></div>
-  </div>
-
-  <div class="lb-nav">
-    <button class="lb-btn" id="lb-prev">← Prev</button>
-    <button class="lb-btn lb-close-btn" id="lb-close">Close</button>
-    <button class="lb-btn" id="lb-next">Next →</button>
-  </div>
+    <div class="lb-content">
+        <div class="lb-img-box">
+            <img id="lb-img" src="" alt="">
+        </div>
+        <div class="lb-info">
+            <div class="lb-title" id="lb-title"></div>
+            <div id="lb-pill-box" style="display:flex;gap:8px;justify-content:center"></div>
+            <div class="lb-nav">
+                <button class="lb-btn" id="lb-prev">PREV</button>
+                <button class="lb-btn close" id="lb-close">CLOSE</button>
+                <button class="lb-btn" id="lb-next">NEXT</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
 const myArt = [
-  { src: 'images/11_ghost_jewel_big_green_apple.png', name: 'C11 and Jewel Fanart', tags: ['character'] },
-  { src: 'images/c3_monolithic.jpg', name: 'C3 Monolithic', tags: ['character'] },
-  { src: 'images/c3_old.png', name: 'C3 Old', tags: ['character'] },
-  { src: 'images/c3_oldref.png', name: 'C3 Old Ref', tags: ['character', 'concept'] },
-  { src: 'images/c3_wired.png', name: 'C3 Wired', tags: ['character'] },
-  { src: 'images/c4_ref.png', name: 'C4 Ref', tags: ['character', 'concept'] },
-  { src: 'images/c5_domain.jpg', name: 'C5 Domain', tags: ['character'] },
-  { src: 'images/c8_wall.png', name: 'C8 Wall', tags: ['character'] },
-  { src: 'images/c9.png', name: 'C9', tags: ['character'] },
-  { src: 'images/c9_cloud.png', name: 'C9 Cloud', tags: ['character'] },
-  { src: 'images/c9_cloud2.png', name: 'C9 Cloud 2', tags: ['character'] },
-  { src: 'images/c9_concept.png', name: 'C9 Concept', tags: ['character', 'concept'] },
-  { src: 'images/c11_avianalt_concept.png', name: 'C11 Alt Concept', tags: ['character', 'concept'] },
-  { src: 'images/c11_dawn.png', name: 'C11 Dawn', tags: ['character'] },
-  { src: 'images/c11_magic.png', name: 'C11 Magic', tags: ['character'] },
-  { src: 'images/c11_summit.png', name: 'C11 Summit', tags: ['character'] },
-  { src: 'images/c11_twilight.png', name: 'C11 Twilight', tags: ['character'] },
-  { src: 'images/c34_lab.jpg', name: 'C34 Lab', tags: ['character'] },
-  { src: 'images/c78_wall.png', name: 'C78 Wall', tags: ['character'] },
-  { src: 'images/catalyst_bg.png', name: 'Catalyst', tags: ['background'] },
-  { src: 'images/character9float.png', name: 'Character 9 Float', tags: ['character'] },
-  { src: 'images/thing.png', name: 'Thing', tags: ['background'] },
-  { src: 'images/towers_bg.png', name: 'Towers', tags: ['background'] },
-  { src: 'images/towerv2_bg.png', name: 'Tower V2', tags: ['background'] },
-  { src: 'images/triangle_bg.png', name: 'Triangle', tags: ['background'] },
-  { src: 'images/water.png', name: 'Water', tags: ['background'] },
-  { src: 'images/aether_bg.png', name: 'Aether', tags: ['background'] },
-  { src: 'images/airship_bg.png', name: 'Airship', tags: ['background'] },
-  { src: 'images/bgs_concept.png', name: 'BGs Concept', tags: ['background', 'concept'] },
-  { src: 'images/domain.jpg', name: 'Domain', tags: ['background'] },
-  { src: 'images/figment_concept.png', name: 'Figment Concept', tags: ['background', 'concept'] },
-  { src: 'images/northman_concept.png', name: 'Northman Concept', tags: ['character', 'concept'] },
-  { src: 'images/scatter_bg.png', name: 'Scatter', tags: ['background'] },
-  { src: 'images/Shapes.png', name: 'Shapes', tags: ['background'] },
-  { src: 'images/ship2_bg.png', name: 'Ship 2', tags: ['background'] },
-  { src: 'images/shipconcept.png', name: 'Ship Concept', tags: ['background', 'concept'] },
-  { src: 'images/tank_bg.png', name: 'Tank', tags: ['background'] }
+    { src: 'images/11_ghost_jewel_big_green_apple.png', name: 'C11 and Jewel Fanart', tags: ['character'] },
+    { src: 'images/c3_monolithic.jpg', name: 'C3 Monolithic', tags: ['character'] },
+    { src: 'images/c3_old.png', name: 'C3 Old', tags: ['character'] },
+    { src: 'images/c3_oldref.png', name: 'C3 Old Ref', tags: ['character', 'concept'] },
+    { src: 'images/c3_wired.png', name: 'C3 Wired', tags: ['character'] },
+    { src: 'images/c4_ref.png', name: 'C4 Ref', tags: ['character', 'concept'] },
+    { src: 'images/c5_domain.jpg', name: 'C5 Domain', tags: ['character'] },
+    { src: 'images/c8_wall.png', name: 'C8 Wall', tags: ['character'] },
+    { src: 'images/c9.png', name: 'C9', tags: ['character'] },
+    { src: 'images/c9_cloud.png', name: 'C9 Cloud', tags: ['character'] },
+    { src: 'images/c9_cloud2.png', name: 'C9 Cloud 2', tags: ['character'] },
+    { src: 'images/c9_concept.png', name: 'C9 Concept', tags: ['character', 'concept'] },
+    { src: 'images/c11_avianalt_concept.png', name: 'C11 Alt Concept', tags: ['character', 'concept'] },
+    { src: 'images/c11_dawn.png', name: 'C11 Dawn', tags: ['character'] },
+    { src: 'images/c11_magic.png', name: 'C11 Magic', tags: ['character'] },
+    { src: 'images/c11_summit.png', name: 'C11 Summit', tags: ['character'] },
+    { src: 'images/c11_twilight.png', name: 'C11 Twilight', tags: ['character'] },
+    { src: 'images/c34_lab.jpg', name: 'C34 Lab', tags: ['character'] },
+    { src: 'images/c78_wall.png', name: 'C78 Wall', tags: ['character'] },
+    { src: 'images/catalyst_bg.png', name: 'Catalyst', tags: ['background'] },
+    { src: 'images/character9float.png', name: 'Character 9 Float', tags: ['character'] },
+    { src: 'images/thing.png', name: 'Thing', tags: ['background'] },
+    { src: 'images/towers_bg.png', name: 'Towers', tags: ['background'] },
+    { src: 'images/towerv2_bg.png', name: 'Tower V2', tags: ['background'] },
+    { src: 'images/triangle_bg.png', name: 'Triangle', tags: ['background'] },
+    { src: 'images/water.png', name: 'Water', tags: ['background'] },
+    { src: 'images/aether_bg.png', name: 'Aether', tags: ['background'] },
+    { src: 'images/airship_bg.png', name: 'Airship', tags: ['background'] },
+    { src: 'images/bgs_concept.png', name: 'BGs Concept', tags: ['background', 'concept'] },
+    { src: 'images/domain.jpg', name: 'Domain', tags: ['background'] },
+    { src: 'images/figment_concept.png', name: 'Figment Concept', tags: ['background', 'concept'] },
+    { src: 'images/northman_concept.png', name: 'Northman Concept', tags: ['character', 'concept'] },
+    { src: 'images/scatter_bg.png', name: 'Scatter', tags: ['background'] },
+    { src: 'images/Shapes.png', name: 'Shapes', tags: ['background'] },
+    { src: 'images/ship2_bg.png', name: 'Ship 2', tags: ['background'] },
+    { src: 'images/shipconcept.png', name: 'Ship Concept', tags: ['background', 'concept'] },
+    { src: 'images/tank_bg.png', name: 'Tank', tags: ['background'] }
 ];
 
 const gallery=document.getElementById('gallery');
@@ -218,27 +355,28 @@ const lbPills=document.getElementById('lb-pill-box');
 let activeFilters = [], filtered=[], idx=0;
 
 function render(){
-  gallery.innerHTML = '';
-  filtered = myArt.filter(item => {
-    if (activeFilters.length === 0) return true;
-    return activeFilters.every(filter => item.tags.includes(filter));
-  });
-  cnt.textContent = filtered.length + (filtered.length === 1 ? ' work' : ' works');
-  filtered.forEach((w,i)=>{
-    const c=document.createElement('div');
-    c.className='card';
-    c.innerHTML=`<img src="${w.src}" alt="${w.name}"><div class="card-overlay"><div class="card-name">${w.name}</div></div>`;
-    c.addEventListener('click',()=>openLb(i));
-    gallery.appendChild(c);
-  });
+    gallery.innerHTML = '';
+    filtered = myArt.filter(item => {
+        if (activeFilters.length === 0) return true;
+        return activeFilters.every(filter => item.tags.includes(filter));
+    });
+    cnt.textContent = filtered.length + ' PIECES REVEALED';
+    
+    filtered.forEach((w,i)=>{
+        const c=document.createElement('div');
+        c.className='card';
+        c.innerHTML=`<img src="${w.src}" alt="${w.name}"><div class="card-overlay"><div class="card-name">${w.name}</div></div>`;
+        c.addEventListener('click',()=>openLb(i));
+        gallery.appendChild(c);
+    });
 }
 
 function openLb(i){
-  idx=i; const w=filtered[i];
-  lbImg.src=w.src; lbTitle.textContent=w.name;
-  lbPills.innerHTML = w.tags.map(t => `<span class="pill tag-${t}">${t}</span>`).join('');
-  lbWrap.classList.add('open');
-  document.body.style.overflow = 'hidden'; 
+    idx=i; const w=filtered[i];
+    lbImg.src=w.src; lbTitle.textContent=w.name;
+    lbPills.innerHTML = w.tags.map(t => `<span class="pill tag-${t}">${t}</span>`).join('');
+    lbWrap.classList.add('open');
+    document.body.style.overflow = 'hidden'; 
 }
 
 function closeLb(){
@@ -246,10 +384,7 @@ function closeLb(){
     document.body.style.overflow = 'auto'; 
 }
 
-lbWrap.addEventListener('click', (e) => {
-    if (e.target === lbWrap) closeLb();
-});
-
+lbWrap.addEventListener('click', (e) => { if (e.target === lbWrap) closeLb(); });
 document.getElementById('lb-close').addEventListener('click',closeLb);
 document.getElementById('lb-prev').addEventListener('click',(e)=>{ e.stopPropagation(); idx=(idx-1+filtered.length)%filtered.length; openLb(idx); });
 document.getElementById('lb-next').addEventListener('click',(e)=>{ e.stopPropagation(); idx=(idx+1)%filtered.length; openLb(idx); });
@@ -262,25 +397,25 @@ document.addEventListener('keydown', (e) => {
 });
 
 document.querySelectorAll('.filter-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const filter = btn.dataset.filter;
-    if (filter === 'all') {
-      activeFilters = [];
-      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-    } else {
-      document.querySelector('[data-filter="all"]').classList.remove('active');
-      if (activeFilters.includes(filter)) {
-        activeFilters = activeFilters.filter(f => f !== filter);
-        btn.classList.remove('active');
-      } else {
-        activeFilters.push(filter);
-        btn.classList.add('active');
-      }
-      if (activeFilters.length === 0) document.querySelector('[data-filter="all"]').classList.add('active');
-    }
-    render();
-  });
+    btn.addEventListener('click', () => {
+        const filter = btn.dataset.filter;
+        if (filter === 'all') {
+            activeFilters = [];
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        } else {
+            document.querySelector('[data-filter="all"]').classList.remove('active');
+            if (activeFilters.includes(filter)) {
+                activeFilters = activeFilters.filter(f => f !== filter);
+                btn.classList.remove('active');
+            } else {
+                activeFilters.push(filter);
+                btn.classList.add('active');
+            }
+            if (activeFilters.length === 0) document.querySelector('[data-filter="all"]').classList.add('active');
+        }
+        render();
+    });
 });
 
 render();
