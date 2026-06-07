@@ -8,299 +8,277 @@
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Fredoka+One&display=swap" rel="stylesheet">
 <style>
 :root {
-    --bg: #fcfaf2;
-    --card-bg: #ffffff;
+    --bg: #f9f8f4;
     --accent: #ff6b6b;
+    --text: #1e272e;
     --char: #e6a800;
-    --bg-tag: #00a87a;
+    --env: #00a87a;
     --con: #7c5fe6;
-    --text: #2d3436;
 }
 
-/* --- GLOBAL SETUP --- */
+/* --- RESET & BASE --- */
 *{margin:0;padding:0;box-sizing:border-box}
 body {
     font-family: 'Nunito', sans-serif;
     background-color: var(--bg);
-    background-image: radial-gradient(#e8e4d8 1px, transparent 1px);
-    background-size: 40px 40px; /* Subtle grid texture */
     color: var(--text);
-    overflow-x: hidden;
+    line-height: 1.6;
 }
 
 header {
-    padding: 4rem 2rem 2rem;
+    padding: 5rem 2rem 2rem;
     text-align: center;
 }
 
 .logo {
     font-family: 'Fredoka One', cursive;
-    font-size: 3.5rem;
-    color: var(--text);
-    letter-spacing: -1px;
+    font-size: 3.8rem;
+    letter-spacing: -2px;
     margin-bottom: 0.5rem;
+    color: var(--text);
 }
-
-.logo .dot { color: var(--accent); }
+.logo span { color: var(--accent); }
 
 .tagline {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     font-weight: 800;
-    color: #888;
+    letter-spacing: 0.3em;
+    color: #a0a0a0;
     text-transform: uppercase;
-    letter-spacing: 0.2em;
 }
-
-/* --- DECORATIVE STRIP --- */
-.color-strip {
-    display: flex;
-    height: 4px;
-    width: 200px;
-    margin: 1.5rem auto;
-    border-radius: 99px;
-    overflow: hidden;
-    opacity: 0.6;
-}
-.color-strip div { flex: 1; }
 
 /* --- FILTERS --- */
 .filter-row {
     display: flex;
-    gap: 0.8rem;
-    padding: 1rem 2rem 3rem;
-    flex-wrap: wrap;
     justify-content: center;
+    gap: 10px;
+    padding: 2rem;
+    flex-wrap: wrap;
     position: sticky;
     top: 0;
-    z-index: 100;
+    z-index: 1000;
+    background: rgba(249, 248, 244, 0.8);
+    backdrop-filter: blur(10px);
 }
 
 .filter-btn {
-    font-family: 'Nunito', sans-serif;
-    font-size: 0.8rem;
+    border: none;
+    padding: 0.7rem 1.5rem;
+    border-radius: 50px;
+    background: #fff;
+    color: #777;
     font-weight: 800;
-    padding: 0.6rem 1.4rem;
-    border-radius: 99px;
+    font-size: 0.75rem;
     cursor: pointer;
-    border: 2px solid #eee;
-    background: white;
-    color: #666;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
-.filter-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0,0,0,0.05);
-    border-color: #ddd;
-}
+.filter-btn:hover { transform: translateY(-2px); color: var(--text); }
 
-.filter-btn.active {
-    background: var(--text);
-    color: white;
-    border-color: var(--text);
-}
-
-/* Custom Active Colors */
-.filter-btn.active[data-filter="character"] { background: var(--char); border-color: var(--char); }
-.filter-btn.active[data-filter="background"] { background: var(--bg-tag); border-color: var(--bg-tag); }
-.filter-btn.active[data-filter="concept"] { background: var(--con); border-color: var(--con); }
+.filter-btn.active { background: var(--text); color: #fff; }
+.filter-btn.active[data-filter="character"] { background: var(--char); }
+.filter-btn.active[data-filter="background"] { background: var(--env); }
+.filter-btn.active[data-filter="concept"] { background: var(--con); }
 
 /* --- MASONRY GALLERY --- */
-.gallery {
-    columns: 3;
-    column-gap: 1.5rem;
-    padding: 0 4rem 4rem;
-    max-width: 1600px;
+.gallery-container {
+    max-width: 1400px;
     margin: 0 auto;
+    padding: 0 2rem 5rem;
 }
 
-@media(max-width: 1100px) { .gallery { columns: 2; padding: 0 2rem 2rem; } }
-@media(max-width: 600px) { .gallery { columns: 1; padding: 0 1.5rem 1.5rem; } }
+.gallery {
+    columns: 3;
+    column-gap: 2rem;
+}
 
+@media (max-width: 1000px) { .gallery { columns: 2; } }
+@media (max-width: 600px) { .gallery { columns: 1; } }
+
+/* The Anchor: This box NEVER moves, preventing the flicker */
 .card {
     break-inside: avoid;
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
+    position: relative;
+    cursor: pointer;
+    border-radius: 20px;
+    /* Invisible padding creates a buffer so mouse never 'loses' the card */
+    padding: 5px; 
+}
+
+/* The Visual Part: This is what animates */
+.card-content {
+    position: relative;
     border-radius: 20px;
     overflow: hidden;
-    cursor: zoom-in;
-    background: var(--card-bg);
-    border: 1px solid rgba(0,0,0,0.05);
-    position: relative;
-    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.03);
+    background: #fff;
+    transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
 }
 
 .card img {
     width: 100%;
     display: block;
-    transition: transform 0.6s ease;
+    transition: transform 0.8s ease;
 }
 
-.card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+/* Hover Effects applied to INNER content */
+.card:hover .card-content {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.12);
 }
 
-.card:hover img { transform: scale(1.03); }
+.card:hover img {
+    transform: scale(1.05);
+}
 
 .card-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 60%);
+    background: linear-gradient(transparent, rgba(0,0,0,0.8));
     display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding: 1.5rem;
+    align-items: flex-end;
+    padding: 2rem;
     opacity: 0;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.4s ease;
     pointer-events: none;
 }
 
 .card:hover .card-overlay { opacity: 1; }
 
-.card-name {
-    color: white;
+.card-title {
+    color: #fff;
     font-family: 'Fredoka One', cursive;
-    font-size: 1.1rem;
-    transform: translateY(10px);
-    transition: transform 0.3s ease;
+    font-size: 1.2rem;
+    transform: translateY(15px);
+    transition: transform 0.4s ease;
 }
 
-.card:hover .card-name { transform: translateY(0); }
+.card:hover .card-title { transform: translateY(0); }
 
-/* --- LIGHTBOX --- */
+/* --- LIGHTBOX POPUP --- */
 .lb-wrap {
     position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(252, 250, 242, 0.85);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
+    inset: 0;
+    background: rgba(15, 15, 15, 0.95);
     display: none;
+    z-index: 2000;
     align-items: center;
     justify-content: center;
-    z-index: 1000;
+    backdrop-filter: blur(8px);
+    padding: 2rem;
 }
+.lb-wrap.open { display: flex; animation: scaleUp 0.3s ease; }
 
-.lb-wrap.open { display: flex; animation: fadeIn 0.3s ease forwards; }
-
-.lb-content {
-    max-width: 90%;
-    max-height: 90vh;
+.lb-box {
+    max-width: 1000px;
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.lb-img-box {
-    box-shadow: 0 30px 60px rgba(0,0,0,0.2);
-    border-radius: 12px;
+.lb-img-container {
+    background: #000;
+    border-radius: 15px;
     overflow: hidden;
-    background: white;
-    line-height: 0;
+    box-shadow: 0 0 50px rgba(0,0,0,0.5);
+    margin-bottom: 1.5rem;
 }
 
-.lb-img-box img {
+.lb-img-container img {
     max-width: 100%;
-    max-height: 75vh;
-    object-fit: contain;
+    max-height: 70vh;
+    display: block;
 }
 
-.lb-info {
-    margin-top: 1.5rem;
-    text-align: center;
-}
-
-.lb-title {
+.lb-name {
+    color: #fff;
     font-family: 'Fredoka One', cursive;
-    font-size: 2rem;
-    color: var(--text);
-    margin-bottom: 0.5rem;
+    font-size: 2.2rem;
+    text-align: center;
+    margin-bottom: 1rem;
 }
 
 .lb-nav {
     display: flex;
-    gap: 1rem;
-    margin-top: 1.5rem;
+    gap: 15px;
 }
 
-.lb-btn {
-    background: var(--text);
-    color: white;
+.btn {
     border: none;
-    padding: 0.8rem 1.8rem;
-    border-radius: 99px;
+    padding: 0.8rem 2rem;
+    border-radius: 50px;
     font-weight: 800;
     cursor: pointer;
-    transition: 0.2s;
+    transition: 0.3s;
 }
 
-.lb-btn:hover { opacity: 0.9; transform: scale(1.05); }
-.lb-btn.close { background: var(--accent); }
+.btn-main { background: #fff; color: #000; }
+.btn-close { background: var(--accent); color: #fff; }
+.btn:hover { transform: scale(1.05); opacity: 0.9; }
 
+.pill-container { display: flex; gap: 8px; margin-bottom: 1.5rem; }
 .pill {
+    padding: 4px 15px;
+    border-radius: 20px;
+    color: #fff;
     font-size: 0.7rem;
     font-weight: 800;
-    padding: 4px 12px;
-    border-radius: 99px;
-    color: white;
     text-transform: uppercase;
 }
 .tag-character { background: var(--char); }
-.tag-background { background: var(--bg-tag); }
+.tag-background { background: var(--env); }
 .tag-concept { background: var(--con); }
 
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes scaleUp {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
 
 .count-badge {
     text-align: center;
     font-weight: 800;
-    color: #bbb;
-    letter-spacing: 0.1em;
+    color: #ccc;
+    font-size: 0.75rem;
     margin-bottom: 2rem;
-    font-size: 0.8rem;
 }
 </style>
 </head>
 <body>
 
 <header>
-    <div class="logo">BigOne<span class="dot">.</span></div>
-    <div class="tagline">Visual Storyteller &nbsp;•&nbsp; 2D Artist</div>
-    <div class="color-strip">
-        <div style="background:#ff6b6b"></div>
-        <div style="background:#e6a800"></div>
-        <div style="background:#00a87a"></div>
-        <div style="background:#7c5fe6"></div>
-    </div>
+    <div class="logo">BigOne<span>.</span></div>
+    <div class="tagline">2D Artist &bull; Character Designer</div>
 </header>
 
 <div class="filter-row">
-    <button class="filter-btn active" data-filter="all">All Works</button>
+    <button class="filter-btn active" data-filter="all">All Portfolio</button>
     <button class="filter-btn" data-filter="character">Characters</button>
     <button class="filter-btn" data-filter="background">Environments</button>
     <button class="filter-btn" data-filter="concept">Concepts</button>
 </div>
 
-<div class="count-badge" id="count-badge">---</div>
+<div class="count-badge" id="count-badge">COLLECTION</div>
 
-<div class="gallery" id="gallery"></div>
+<div class="gallery-container">
+    <div class="gallery" id="gallery"></div>
+</div>
 
 <!-- LIGHTBOX -->
 <div class="lb-wrap" id="lb-wrap">
-    <div class="lb-content">
-        <div class="lb-img-box">
+    <div class="lb-box">
+        <div class="lb-img-container">
             <img id="lb-img" src="" alt="">
         </div>
-        <div class="lb-info">
-            <div class="lb-title" id="lb-title"></div>
-            <div id="lb-pill-box" style="display:flex;gap:8px;justify-content:center"></div>
-            <div class="lb-nav">
-                <button class="lb-btn" id="lb-prev">PREV</button>
-                <button class="lb-btn close" id="lb-close">CLOSE</button>
-                <button class="lb-btn" id="lb-next">NEXT</button>
-            </div>
+        <div class="lb-name" id="lb-title"></div>
+        <div class="pill-container" id="lb-pill-box"></div>
+        <div class="lb-nav">
+            <button class="btn btn-main" id="lb-prev">← PREV</button>
+            <button class="btn btn-close" id="lb-close">CLOSE</button>
+            <button class="btn btn-main" id="lb-next">NEXT →</button>
         </div>
     </div>
 </div>
@@ -350,22 +328,25 @@ const gallery=document.getElementById('gallery');
 const lbWrap=document.getElementById('lb-wrap');
 const lbImg=document.getElementById('lb-img');
 const lbTitle=document.getElementById('lb-title');
-const cnt=document.getElementById('count-badge');
 const lbPills=document.getElementById('lb-pill-box');
+const cnt=document.getElementById('count-badge');
 let activeFilters = [], filtered=[], idx=0;
 
 function render(){
     gallery.innerHTML = '';
     filtered = myArt.filter(item => {
         if (activeFilters.length === 0) return true;
-        return activeFilters.every(filter => item.tags.includes(filter));
+        return activeFilters.every(f => item.tags.includes(f));
     });
     cnt.textContent = filtered.length + ' PIECES REVEALED';
     
     filtered.forEach((w,i)=>{
         const c=document.createElement('div');
         c.className='card';
-        c.innerHTML=`<img src="${w.src}" alt="${w.name}"><div class="card-overlay"><div class="card-name">${w.name}</div></div>`;
+        c.innerHTML=`<div class="card-content">
+            <img src="${w.src}" alt="${w.name}">
+            <div class="card-overlay"><div class="card-title">${w.name}</div></div>
+        </div>`;
         c.addEventListener('click',()=>openLb(i));
         gallery.appendChild(c);
     });
@@ -398,18 +379,18 @@ document.addEventListener('keydown', (e) => {
 
 document.querySelectorAll('.filter-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-        const filter = btn.dataset.filter;
-        if (filter === 'all') {
+        const f = btn.dataset.filter;
+        if (f === 'all') {
             activeFilters = [];
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
         } else {
             document.querySelector('[data-filter="all"]').classList.remove('active');
-            if (activeFilters.includes(filter)) {
-                activeFilters = activeFilters.filter(f => f !== filter);
+            if (activeFilters.includes(f)) {
+                activeFilters = activeFilters.filter(item => item !== f);
                 btn.classList.remove('active');
             } else {
-                activeFilters.push(filter);
+                activeFilters.push(f);
                 btn.classList.add('active');
             }
             if (activeFilters.length === 0) document.querySelector('[data-filter="all"]').classList.add('active');
