@@ -22,7 +22,6 @@ header{padding:2rem 2rem 1rem;text-align:center}
 .filter-btn{font-family:'Nunito',sans-serif;font-size:0.78rem;font-weight:800;padding:0.45rem 1.2rem;border-radius:99px;cursor:pointer;border:2px solid #3a3a3a;background:#fffdf7;color:#3a3a3a;transition:all 0.18s;text-transform:uppercase}
 .filter-btn:hover, .filter-btn.active{background:#3a3a3a;color:#fff}
 
-/* Active Tag Colors */
 .filter-btn.active[data-filter="character"]{background:#e6a800;border-color:#e6a800}
 .filter-btn.active[data-filter="background"]{background:#00a87a;border-color:#00a87a}
 .filter-btn.active[data-filter="concept"]{background:#7c5fe6;border-color:#7c5fe6}
@@ -31,13 +30,52 @@ header{padding:2rem 2rem 1rem;text-align:center}
 
 /* --- GALLERY GRID --- */
 .gallery {display: grid;grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));gap: 1.5rem;padding: 0.5rem 2rem 3rem;}
-.card{border-radius:16px;overflow:hidden;cursor:pointer;border:2.5px solid #ece8df;transition:transform 0.2s,box-shadow 0.2s;position:relative;background:#f0ece3; aspect-ratio: 16/9;}
-.card:hover{transform:translateY(-5px);box-shadow:0 10px 25px rgba(0,0,0,0.1)}
-.card img{width:100%; height:100%; display:block; object-fit:cover}
 
-/* FIX: pointer-events:none stops the flickering on edges */
-.card-overlay{position:absolute;inset:0;background:rgba(255,253,245,0.94);opacity:0;transition:opacity 0.2s;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;pointer-events:none}
-.card:hover .card-overlay{opacity:1}
+/* The Card hit-box stays perfectly still to prevent flickering */
+.card {
+    border-radius:16px;
+    overflow:hidden;
+    cursor:pointer;
+    border:2.5px solid #ece8df;
+    position:relative;
+    background:#f0ece3; 
+    aspect-ratio: 16/9;
+    /* This ensures the card container NEVER moves */
+    transform: translateZ(0); 
+}
+
+.card img {
+    width:100%; height:100%; 
+    display:block; 
+    object-fit:cover;
+    transition: transform 0.4s cubic-bezier(0.2, 1, 0.3, 1);
+    will-change: transform;
+}
+
+/* On hover, we only zoom the image, we don't move the card container */
+.card:hover img {
+    transform: scale(1.08);
+}
+
+.card-overlay {
+    position:absolute;
+    inset:0;
+    background:rgba(255,253,245,0.85);
+    opacity:0;
+    transition: opacity 0.3s ease;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    pointer-events:none; /* Mouse "sees through" this layer */
+    z-index: 2;
+}
+
+.card:hover .card-overlay {
+    opacity:1;
+}
+
 .card-name{font-family:'Fredoka One',cursive;font-size:1.1rem;color:#1a1a1a;text-align:center;padding:0 10px}
 
 /* --- POPUP LIGHTBOX (MODAL) --- */
@@ -45,42 +83,39 @@ header{padding:2rem 2rem 1rem;text-align:center}
     position: fixed;
     top: 0; left: 0;
     width: 100%; height: 100%;
-    background: rgba(0,0,0,0.9); /* Dark background */
-    display: none; /* Hidden by default */
+    background: rgba(0,0,0,0.92);
+    display: none;
     align-items: center;
     justify-content: center;
     flex-direction: column;
     z-index: 9999;
     padding: 20px;
+    backdrop-filter: blur(4px);
 }
 .lb-wrap.open{display: flex;}
 
 .lb-img-box{
     position: relative;
-    max-width: 90%;
-    max-height: 80vh;
+    max-width: 95%;
+    max-height: 75vh;
     border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 0 30px rgba(0,0,0,0.5);
+    box-shadow: 0 0 40px rgba(0,0,0,0.6);
     background: #000;
 }
 .lb-img-box img{
     max-width: 100%;
-    max-height: 80vh;
+    max-height: 75vh;
     display: block;
     object-fit: contain;
 }
 
-.lb-info-box {
-    text-align: center;
-    margin-top: 15px;
-    color: #fff;
-}
+.lb-info-box { text-align: center; margin-top: 20px; color: #fff; }
 .lb-title{font-family:'Fredoka One',cursive;font-size:1.8rem; margin-bottom: 8px;}
 
-.lb-nav{display:flex;gap:1rem; margin-top: 20px;}
+.lb-nav{display:flex;gap:1rem; margin-top: 25px;}
 .lb-btn{font-weight:800;padding:0.7rem 1.6rem;border-radius:99px;cursor:pointer;border:none;background:#fff;color:#000; transition: 0.2s;}
-.lb-btn:hover{transform: scale(1.05); background: #eee;}
+.lb-btn:hover{transform: translateY(-2px); background: #f0f0f0;}
 .lb-close-btn{background:#ff6b6b; color: #fff;}
 .lb-close-btn:hover{background: #ff4f4f;}
 
@@ -203,15 +238,14 @@ function openLb(i){
   lbImg.src=w.src; lbTitle.textContent=w.name;
   lbPills.innerHTML = w.tags.map(t => `<span class="pill tag-${t}">${t}</span>`).join('');
   lbWrap.classList.add('open');
-  document.body.style.overflow = 'hidden'; // Stop background scrolling
+  document.body.style.overflow = 'hidden'; 
 }
 
 function closeLb(){
     lbWrap.classList.remove('open');
-    document.body.style.overflow = 'auto'; // Enable scrolling again
+    document.body.style.overflow = 'auto'; 
 }
 
-// Close if clicking the dark area
 lbWrap.addEventListener('click', (e) => {
     if (e.target === lbWrap) closeLb();
 });
@@ -220,7 +254,6 @@ document.getElementById('lb-close').addEventListener('click',closeLb);
 document.getElementById('lb-prev').addEventListener('click',(e)=>{ e.stopPropagation(); idx=(idx-1+filtered.length)%filtered.length; openLb(idx); });
 document.getElementById('lb-next').addEventListener('click',(e)=>{ e.stopPropagation(); idx=(idx+1)%filtered.length; openLb(idx); });
 
-// Keyboard support
 document.addEventListener('keydown', (e) => {
     if (!lbWrap.classList.contains('open')) return;
     if (e.key === "Escape") closeLb();
