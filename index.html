@@ -7,13 +7,30 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Fredoka+One&display=swap" rel="stylesheet">
 <style>
+/* --- THEME VARIABLES --- */
 :root {
     --bg: #f9f8f4;
+    --card-bg: #ffffff;
     --accent: #ff6b6b;
     --text: #1e272e;
+    --subtext: #a0a0a0;
     --char: #e6a800;
     --env: #00a87a;
     --con: #7c5fe6;
+    --filter-bar: rgba(249, 248, 244, 0.8);
+    --card-shadow: rgba(0,0,0,0.06);
+    --card-shadow-hover: rgba(0,0,0,0.12);
+}
+
+/* DARK MODE OVERRIDES */
+body.dark-mode {
+    --bg: #121212;
+    --card-bg: #1e1e1e;
+    --text: #f1f1f1;
+    --subtext: #777;
+    --filter-bar: rgba(18, 18, 18, 0.85);
+    --card-shadow: rgba(0,0,0,0.4);
+    --card-shadow-hover: rgba(0,0,0,0.6);
 }
 
 /* --- RESET & BASE --- */
@@ -24,29 +41,55 @@ body {
     color: var(--text);
     line-height: 1.6;
     overflow-x: hidden;
+    transition: background-color 0.4s ease, color 0.4s ease; /* Smooth mode switch */
 }
+
+/* --- THEME TOGGLE BUTTON --- */
+.theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: var(--card-bg);
+    border: 1px solid var(--subtext);
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 5000;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    font-size: 1.2rem;
+    transition: transform 0.2s;
+}
+.theme-toggle:hover { transform: scale(1.1); }
 
 header { padding: 5rem 2rem 2rem; text-align: center; }
 .logo { font-family: 'Fredoka One', cursive; font-size: 3.8rem; letter-spacing: -2px; color: var(--text); }
 .logo span { color: var(--accent); }
-.tagline { font-size: 0.85rem; font-weight: 800; letter-spacing: 0.3em; color: #a0a0a0; text-transform: uppercase; }
+.tagline { font-size: 0.85rem; font-weight: 800; letter-spacing: 0.3em; color: var(--subtext); text-transform: uppercase; }
 
 /* --- FILTERS --- */
 .filter-row {
     display: flex; justify-content: center; gap: 10px; padding: 2rem; flex-wrap: wrap;
     position: sticky; top: 0; z-index: 1000;
-    background: rgba(249, 248, 244, 0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    background: var(--filter-bar); 
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    transition: background-color 0.4s ease;
 }
 .filter-btn {
-    border: none; padding: 0.7rem 1.5rem; border-radius: 50px; background: #fff; color: #777;
+    border: none; padding: 0.7rem 1.5rem; border-radius: 50px; 
+    background: var(--card-bg); color: var(--text);
     font-weight: 800; font-size: 0.75rem; cursor: pointer; text-transform: uppercase;
     transition: all 0.3s ease; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
-.filter-btn:hover { transform: translateY(-2px); color: var(--text); }
-.filter-btn.active { background: var(--text); color: #fff; }
-.filter-btn.active[data-filter="character"] { background: var(--char); }
-.filter-btn.active[data-filter="background"] { background: var(--env); }
-.filter-btn.active[data-filter="concept"] { background: var(--con); }
+.filter-btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
+.filter-btn.active { background: var(--text); color: var(--bg); }
+.filter-btn.active[data-filter="character"] { background: var(--char); color: #fff; }
+.filter-btn.active[data-filter="background"] { background: var(--env); color: #fff; }
+.filter-btn.active[data-filter="concept"] { background: var(--con); color: #fff; }
 
 /* --- MASONRY GALLERY --- */
 .gallery-container { max-width: 1400px; margin: 0 auto; padding: 0 2rem 5rem; }
@@ -54,7 +97,6 @@ header { padding: 5rem 2rem 2rem; text-align: center; }
 @media (max-width: 1000px) { .gallery { columns: 2; } }
 @media (max-width: 600px) { .gallery { columns: 1; } }
 
-/* STABILIZED CARD */
 .card {
     break-inside: avoid-column;
     margin-bottom: 2.5rem;
@@ -62,9 +104,9 @@ header { padding: 5rem 2rem 2rem; text-align: center; }
     cursor: pointer;
     border-radius: 20px;
     isolation: isolate; 
-    background: #fff;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.06);
-    transition: box-shadow 0.4s ease;
+    background: var(--card-bg);
+    box-shadow: 0 10px 30px var(--card-shadow);
+    transition: box-shadow 0.4s ease, background-color 0.4s ease;
 }
 
 .card-content {
@@ -72,7 +114,7 @@ header { padding: 5rem 2rem 2rem; text-align: center; }
     border-radius: 20px;
     overflow: hidden;
     contain: paint; 
-    background: #fff;
+    background: var(--card-bg);
     transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     backface-visibility: hidden; 
 }
@@ -83,15 +125,9 @@ header { padding: 5rem 2rem 2rem; text-align: center; }
     will-change: transform;
 }
 
-.card:hover {
-    box-shadow: 0 20px 40px rgba(0,0,0,0.12);
-}
-.card:hover .card-content {
-    transform: translateY(-8px);
-}
-.card:hover img {
-    transform: scale(1.04);
-}
+.card:hover { box-shadow: 0 20px 40px var(--card-shadow-hover); }
+.card:hover .card-content { transform: translateY(-8px); }
+.card:hover img { transform: scale(1.04); }
 
 .card-overlay {
     position: absolute; inset: 0;
@@ -104,13 +140,13 @@ header { padding: 5rem 2rem 2rem; text-align: center; }
 
 /* --- LIGHTBOX POPUP --- */
 .lb-wrap {
-    position: fixed; inset: 0; background: rgba(10, 10, 10, 0.96);
-    display: none; z-index: 2000; align-items: center; justify-content: center;
-    backdrop-filter: blur(12px); padding: 1rem;
+    position: fixed; inset: 0; background: rgba(10, 10, 10, 0.98);
+    display: none; z-index: 6000; align-items: center; justify-content: center;
+    backdrop-filter: blur(15px); padding: 1rem;
 }
 .lb-wrap.open { display: flex; }
 .lb-box { max-width: 1100px; width: 100%; display: flex; flex-direction: column; align-items: center; }
-.lb-img-container { background: #000; border-radius: 12px; overflow: hidden; margin-bottom: 1rem; }
+.lb-img-container { background: #000; border-radius: 12px; overflow: hidden; margin-bottom: 1rem; border: 1px solid #333; }
 .lb-img-container img { max-width: 100%; max-height: 75vh; display: block; }
 .lb-name { color: #fff; font-family: 'Fredoka One', cursive; font-size: 2rem; margin-bottom: 0.5rem; text-align: center; }
 .lb-nav { display: flex; gap: 12px; }
@@ -124,14 +160,16 @@ header { padding: 5rem 2rem 2rem; text-align: center; }
 .tag-character { background: var(--char); }
 .tag-background { background: var(--env); }
 .tag-concept { background: var(--con); }
-.count-badge { text-align: center; font-weight: 800; color: #ccc; font-size: 0.75rem; margin-bottom: 2rem; }
+.count-badge { text-align: center; font-weight: 800; color: var(--subtext); font-size: 0.75rem; margin-bottom: 2rem; }
 </style>
 </head>
 <body>
 
+<!-- THEME TOGGLE -->
+<div class="theme-toggle" id="theme-toggle" title="Toggle Dark/Light Mode">🌓</div>
+
 <header>
     <div class="logo">James Aaron Balan<span>.</span></div>
-    <!-- TAGLINE UPDATED BELOW -->
     <div class="tagline">2D Artist &bull; Character Designer &bull; Concept Artist</div>
 </header>
 
@@ -163,6 +201,24 @@ header { padding: 5rem 2rem 2rem; text-align: center; }
 </div>
 
 <script>
+// --- THEME LOGIC ---
+const themeToggle = document.getElementById('theme-toggle');
+const body = document.body;
+
+// Check for saved theme
+if (localStorage.getItem('theme') === 'dark') {
+    body.classList.add('dark-mode');
+    themeToggle.textContent = '☀️';
+}
+
+themeToggle.addEventListener('click', () => {
+    body.classList.toggle('dark-mode');
+    const isDark = body.classList.contains('dark-mode');
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    themeToggle.textContent = isDark ? '☀️' : '🌓';
+});
+
+// --- ART DATA ---
 const myArt = [
     { src: 'images/c1c2_front.png', name: 'c1 and c2 ref', tags: ['character', 'concept'] },
     { src: 'images/11_ghost_jewel_big_green_apple.png', name: 'C11 and Jewel Fanart', tags: ['character'] },
@@ -189,6 +245,7 @@ const myArt = [
     { src: 'images/thing.png', name: 'Thing', tags: ['background'] },
     { src: 'images/towers_bg.png', name: 'Towers', tags: ['background'] },
     { src: 'images/towerv2_bg.png', name: 'Tower V2', tags: ['background'] },
+    { src: 'images/triangle_bg.png', name: 'Triangle', tags: ['background'] },
     { src: 'images/water.png', name: 'Water', tags: ['background'] },
     { src: 'images/aether_bg.png', name: 'Aether', tags: ['background'] },
     { src: 'images/airship_bg.png', name: 'Airship', tags: ['background'] },
@@ -201,7 +258,6 @@ const myArt = [
     { src: 'images/ship2_bg.png', name: 'Ship 2', tags: ['background'] },
     { src: 'images/shipconcept.png', name: 'Ship Concept', tags: ['background', 'concept'] },
     { src: 'images/tank_bg.png', name: 'Tank', tags: ['background'] }
-    { src: 'images/triangle_bg.png', name: 'Triangle', tags: ['background'] },
 ];
 
 const gallery=document.getElementById('gallery');
