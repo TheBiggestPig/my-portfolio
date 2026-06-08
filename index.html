@@ -23,227 +23,113 @@ body {
     background-color: var(--bg);
     color: var(--text);
     line-height: 1.6;
+    overflow-x: hidden;
 }
 
-header {
-    padding: 5rem 2rem 2rem;
-    text-align: center;
-}
-
-.logo {
-    font-family: 'Fredoka One', cursive;
-    font-size: 3.8rem;
-    letter-spacing: -2px;
-    margin-bottom: 0.5rem;
-    color: var(--text);
-}
+header { padding: 5rem 2rem 2rem; text-align: center; }
+.logo { font-family: 'Fredoka One', cursive; font-size: 3.8rem; letter-spacing: -2px; color: var(--text); }
 .logo span { color: var(--accent); }
-
-.tagline {
-    font-size: 0.85rem;
-    font-weight: 800;
-    letter-spacing: 0.3em;
-    color: #a0a0a0;
-    text-transform: uppercase;
-}
+.tagline { font-size: 0.85rem; font-weight: 800; letter-spacing: 0.3em; color: #a0a0a0; text-transform: uppercase; }
 
 /* --- FILTERS --- */
 .filter-row {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    padding: 2rem;
-    flex-wrap: wrap;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    background: rgba(249, 248, 244, 0.85);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    display: flex; justify-content: center; gap: 10px; padding: 2rem; flex-wrap: wrap;
+    position: sticky; top: 0; z-index: 1000;
+    background: rgba(249, 248, 244, 0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
 }
-
 .filter-btn {
-    border: none;
-    padding: 0.7rem 1.5rem;
-    border-radius: 50px;
-    background: #fff;
-    color: #777;
-    font-weight: 800;
-    font-size: 0.75rem;
-    cursor: pointer;
-    text-transform: uppercase;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    border: none; padding: 0.7rem 1.5rem; border-radius: 50px; background: #fff; color: #777;
+    font-weight: 800; font-size: 0.75rem; cursor: pointer; text-transform: uppercase;
+    transition: all 0.3s ease; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
-
 .filter-btn:hover { transform: translateY(-2px); color: var(--text); }
-
 .filter-btn.active { background: var(--text); color: #fff; }
 .filter-btn.active[data-filter="character"] { background: var(--char); }
 .filter-btn.active[data-filter="background"] { background: var(--env); }
 .filter-btn.active[data-filter="concept"] { background: var(--con); }
 
 /* --- MASONRY GALLERY --- */
-.gallery-container {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 0 2rem 5rem;
-}
-
-.gallery {
-    columns: 3;
-    column-gap: 2rem;
-}
-
+.gallery-container { max-width: 1400px; margin: 0 auto; padding: 0 2rem 5rem; }
+.gallery { columns: 3; column-gap: 2rem; }
 @media (max-width: 1000px) { .gallery { columns: 2; } }
 @media (max-width: 600px) { .gallery { columns: 1; } }
 
-/* Flickering Fix: The card container never moves */
+/* STABILIZED CARD */
 .card {
-    break-inside: avoid;
-    margin-bottom: 2rem;
+    break-inside: avoid-column;
+    margin-bottom: 2.5rem;
     position: relative;
     cursor: pointer;
     border-radius: 20px;
-    padding: 2px; 
+    /* isolation prevents the card from "bugging out" the rest of the layout */
+    isolation: isolate; 
+    background: #fff;
+    /* The shadow stays on the base card so it doesn't move */
+    box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+    transition: box-shadow 0.4s ease;
 }
 
 .card-content {
     position: relative;
     border-radius: 20px;
     overflow: hidden;
+    /* contain:paint ensures the image never bleeds out of the corners */
+    contain: paint; 
     background: #fff;
-    transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    /* backface-visibility prevents flickering during animation */
+    backface-visibility: hidden; 
 }
 
 .card img {
-    width: 100%;
-    display: block;
-    transition: transform 0.8s ease;
+    width: 100%; display: block;
+    transition: transform 0.6s ease;
+    will-change: transform;
 }
 
-/* Lift effect on inner part only */
-.card:hover .card-content {
-    transform: translateY(-10px);
+/* Hover: The Inner content lifts, but the shadow container stays still */
+.card:hover {
     box-shadow: 0 20px 40px rgba(0,0,0,0.12);
 }
-
+.card:hover .card-content {
+    transform: translateY(-8px);
+}
 .card:hover img {
-    transform: scale(1.05);
+    transform: scale(1.04);
 }
 
 .card-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(transparent, rgba(0,0,0,0.8));
-    display: flex;
-    align-items: flex-end;
-    padding: 2rem;
-    opacity: 0;
-    transition: opacity 0.4s ease;
-    pointer-events: none;
+    position: absolute; inset: 0;
+    background: linear-gradient(transparent, rgba(0,0,0,0.7));
+    display: flex; align-items: flex-end; padding: 1.5rem;
+    opacity: 0; transition: opacity 0.3s ease; pointer-events: none;
 }
-
 .card:hover .card-overlay { opacity: 1; }
-
-.card-title {
-    color: #fff;
-    font-family: 'Fredoka One', cursive;
-    font-size: 1.2rem;
-    transform: translateY(15px);
-    transition: transform 0.4s ease;
-}
-
-.card:hover .card-title { transform: translateY(0); }
+.card-title { color: #fff; font-family: 'Fredoka One', cursive; font-size: 1.1rem; }
 
 /* --- LIGHTBOX POPUP --- */
 .lb-wrap {
-    position: fixed;
-    inset: 0;
-    background: rgba(15, 15, 15, 0.95);
-    display: none;
-    z-index: 2000;
-    align-items: center;
-    justify-content: center;
-    backdrop-filter: blur(10px);
-    padding: 2rem;
+    position: fixed; inset: 0; background: rgba(10, 10, 10, 0.96);
+    display: none; z-index: 2000; align-items: center; justify-content: center;
+    backdrop-filter: blur(12px); padding: 1rem;
 }
-.lb-wrap.open { display: flex; animation: scaleUp 0.3s ease; }
-
-.lb-box {
-    max-width: 1000px;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.lb-img-container {
-    background: #000;
-    border-radius: 15px;
-    overflow: hidden;
-    box-shadow: 0 0 50px rgba(0,0,0,0.5);
-    margin-bottom: 1.5rem;
-}
-
-.lb-img-container img {
-    max-width: 100%;
-    max-height: 70vh;
-    display: block;
-}
-
-.lb-name {
-    color: #fff;
-    font-family: 'Fredoka One', cursive;
-    font-size: 2.2rem;
-    text-align: center;
-    margin-bottom: 1rem;
-}
-
-.lb-nav {
-    display: flex;
-    gap: 15px;
-}
-
-.btn {
-    border: none;
-    padding: 0.8rem 2rem;
-    border-radius: 50px;
-    font-weight: 800;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
+.lb-wrap.open { display: flex; }
+.lb-box { max-width: 1100px; width: 100%; display: flex; flex-direction: column; align-items: center; }
+.lb-img-container { background: #000; border-radius: 12px; overflow: hidden; margin-bottom: 1rem; }
+.lb-img-container img { max-width: 100%; max-height: 75vh; display: block; }
+.lb-name { color: #fff; font-family: 'Fredoka One', cursive; font-size: 2rem; margin-bottom: 0.5rem; text-align: center; }
+.lb-nav { display: flex; gap: 12px; }
+.btn { border: none; padding: 0.8rem 1.8rem; border-radius: 50px; font-weight: 800; cursor: pointer; transition: 0.2s; }
 .btn-main { background: #fff; color: #000; }
 .btn-close { background: var(--accent); color: #fff; }
-.btn:hover { transform: scale(1.05); opacity: 0.9; }
+.btn:hover { transform: scale(1.05); }
 
-.pill-container { display: flex; gap: 8px; margin-bottom: 1.5rem; }
-.pill {
-    padding: 4px 15px;
-    border-radius: 20px;
-    color: #fff;
-    font-size: 0.7rem;
-    font-weight: 800;
-    text-transform: uppercase;
-}
+.pill-container { display: flex; gap: 8px; margin-bottom: 1rem; }
+.pill { padding: 4px 12px; border-radius: 20px; color: #fff; font-size: 0.65rem; font-weight: 800; text-transform: uppercase; }
 .tag-character { background: var(--char); }
 .tag-background { background: var(--env); }
 .tag-concept { background: var(--con); }
-
-@keyframes scaleUp {
-    from { opacity: 0; transform: scale(0.95); }
-    to { opacity: 1; transform: scale(1); }
-}
-
-.count-badge {
-    text-align: center;
-    font-weight: 800;
-    color: #ccc;
-    font-size: 0.75rem;
-    margin-bottom: 2rem;
-}
+.count-badge { text-align: center; font-weight: 800; color: #ccc; font-size: 0.75rem; margin-bottom: 2rem; }
 </style>
 </head>
 <body>
@@ -269,9 +155,7 @@ header {
 <!-- LIGHTBOX -->
 <div class="lb-wrap" id="lb-wrap">
     <div class="lb-box">
-        <div class="lb-img-container">
-            <img id="lb-img" src="" alt="">
-        </div>
+        <div class="lb-img-container"><img id="lb-img" src="" alt=""></div>
         <div class="lb-name" id="lb-title"></div>
         <div class="pill-container" id="lb-pill-box"></div>
         <div class="lb-nav">
@@ -283,7 +167,6 @@ header {
 </div>
 
 <script>
-// The Database - Your Artworks go here
 const myArt = [
     { src: 'images/c1c2_front.png', name: 'c1 and c2 ref', tags: ['character', 'concept'] },
     { src: 'images/11_ghost_jewel_big_green_apple.png', name: 'C11 and Jewel Fanart', tags: ['character'] },
