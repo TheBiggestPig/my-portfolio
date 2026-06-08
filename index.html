@@ -1,3 +1,254 @@
+
+User 9:54 PM
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BigOne — 2D Artist Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Fredoka+One&display=swap" rel="stylesheet">
+<style>
+:root {
+    --bg: #f9f8f4;
+    --accent: #ff6b6b;
+    --text: #1e272e;
+    --char: #e6a800;
+    --env: #00a87a;
+    --con: #7c5fe6;
+}
+/* --- RESET & BASE --- */
+*{margin:0;padding:0;box-sizing:border-box}
+body {
+font-family: 'Nunito', sans-serif;
+background-color: var(--bg);
+color: var(--text);
+line-height: 1.6;
+}
+header {
+padding: 5rem 2rem 2rem;
+text-align: center;
+}
+.logo {
+font-family: 'Fredoka One', cursive;
+font-size: 3.8rem;
+letter-spacing: -2px;
+margin-bottom: 0.5rem;
+color: var(--text);
+}
+.logo span { color: var(--accent); }
+.tagline {
+font-size: 0.85rem;
+font-weight: 800;
+letter-spacing: 0.3em;
+color: #a0a0a0;
+text-transform: uppercase;
+}
+/* --- FILTERS --- */
+.filter-row {
+display: flex;
+justify-content: center;
+gap: 10px;
+padding: 2rem;
+flex-wrap: wrap;
+position: sticky;
+top: 0;
+z-index: 1000;
+background: rgba(249, 248, 244, 0.8);
+backdrop-filter: blur(10px);
+}
+.filter-btn {
+border: none;
+padding: 0.7rem 1.5rem;
+border-radius: 50px;
+background: #fff;
+color: #777;
+font-weight: 800;
+font-size: 0.75rem;
+cursor: pointer;
+text-transform: uppercase;
+transition: all 0.3s ease;
+box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+.filter-btn:hover { transform: translateY(-2px); color: var(--text); }
+.filter-btn.active { background: var(--text); color: #fff; }
+.filter-btn.active[data-filter="character"] { background: var(--char); }
+.filter-btn.active[data-filter="background"] { background: var(--env); }
+.filter-btn.active[data-filter="concept"] { background: var(--con); }
+/* --- MASONRY GALLERY --- */
+.gallery-container {
+max-width: 1400px;
+margin: 0 auto;
+padding: 0 2rem 5rem;
+}
+.gallery {
+columns: 3;
+column-gap: 2rem;
+}
+@media (max-width: 1000px) { .gallery { columns: 2; } }
+@media (max-width: 600px) { .gallery { columns: 1; } }
+/* The Anchor: This box NEVER moves, preventing the flicker /
+.card {
+break-inside: avoid;
+margin-bottom: 2rem;
+position: relative;
+cursor: pointer;
+border-radius: 20px;
+/ Invisible padding creates a buffer so mouse never 'loses' the card */
+padding: 5px;
+}
+/* The Visual Part: This is what animates */
+.card-content {
+position: relative;
+border-radius: 20px;
+overflow: hidden;
+background: #fff;
+transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+.card img {
+width: 100%;
+display: block;
+transition: transform 0.8s ease;
+}
+/* Hover Effects applied to INNER content */
+.card:hover .card-content {
+transform: translateY(-10px);
+box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+}
+.card:hover img {
+transform: scale(1.05);
+}
+.card-overlay {
+position: absolute;
+inset: 0;
+background: linear-gradient(transparent, rgba(0,0,0,0.8));
+display: flex;
+align-items: flex-end;
+padding: 2rem;
+opacity: 0;
+transition: opacity 0.4s ease;
+pointer-events: none;
+}
+.card:hover .card-overlay { opacity: 1; }
+.card-title {
+color: #fff;
+font-family: 'Fredoka One', cursive;
+font-size: 1.2rem;
+transform: translateY(15px);
+transition: transform 0.4s ease;
+}
+.card:hover .card-title { transform: translateY(0); }
+/* --- LIGHTBOX POPUP --- */
+.lb-wrap {
+position: fixed;
+inset: 0;
+background: rgba(15, 15, 15, 0.95);
+display: none;
+z-index: 2000;
+align-items: center;
+justify-content: center;
+backdrop-filter: blur(8px);
+padding: 2rem;
+}
+.lb-wrap.open { display: flex; animation: scaleUp 0.3s ease; }
+.lb-box {
+max-width: 1000px;
+width: 100%;
+display: flex;
+flex-direction: column;
+align-items: center;
+}
+.lb-img-container {
+background: #000;
+border-radius: 15px;
+overflow: hidden;
+box-shadow: 0 0 50px rgba(0,0,0,0.5);
+margin-bottom: 1.5rem;
+}
+.lb-img-container img {
+max-width: 100%;
+max-height: 70vh;
+display: block;
+}
+.lb-name {
+color: #fff;
+font-family: 'Fredoka One', cursive;
+font-size: 2.2rem;
+text-align: center;
+margin-bottom: 1rem;
+}
+.lb-nav {
+display: flex;
+gap: 15px;
+}
+.btn {
+border: none;
+padding: 0.8rem 2rem;
+border-radius: 50px;
+font-weight: 800;
+cursor: pointer;
+transition: 0.3s;
+}
+.btn-main { background: #fff; color: #000; }
+.btn-close { background: var(--accent); color: #fff; }
+.btn:hover { transform: scale(1.05); opacity: 0.9; }
+.pill-container { display: flex; gap: 8px; margin-bottom: 1.5rem; }
+.pill {
+padding: 4px 15px;
+border-radius: 20px;
+color: #fff;
+font-size: 0.7rem;
+font-weight: 800;
+text-transform: uppercase;
+}
+.tag-character { background: var(--char); }
+.tag-background { background: var(--env); }
+.tag-concept { background: var(--con); }
+@keyframes scaleUp {
+from { opacity: 0; transform: scale(0.95); }
+to { opacity: 1; transform: scale(1); }
+}
+.count-badge {
+text-align: center;
+font-weight: 800;
+color: #ccc;
+font-size: 0.75rem;
+margin-bottom: 2rem;
+}
+</style>
+</head>
+<body>
+<header>
+    <div class="logo">BigOne<span>.</span></div>
+    <div class="tagline">2D Artist &bull; Character Designer</div>
+</header>
+<div class="filter-row">
+    <button class="filter-btn active" data-filter="all">All Portfolio</button>
+    <button class="filter-btn" data-filter="character">Characters</button>
+    <button class="filter-btn" data-filter="background">Environments</button>
+    <button class="filter-btn" data-filter="concept">Concepts</button>
+</div>
+<div class="count-badge" id="count-badge">COLLECTION</div>
+<div class="gallery-container">
+    <div class="gallery" id="gallery"></div>
+</div>
+<!-- LIGHTBOX -->
+<div class="lb-wrap" id="lb-wrap">
+    <div class="lb-box">
+        <div class="lb-img-container">
+            <img id="lb-img" src="" alt="">
+        </div>
+        <div class="lb-name" id="lb-title"></div>
+        <div class="pill-container" id="lb-pill-box"></div>
+        <div class="lb-nav">
+            <button class="btn btn-main" id="lb-prev">← PREV</button>
+            <button class="btn btn-close" id="lb-close">CLOSE</button>
+            <button class="btn btn-main" id="lb-next">NEXT →</button>
+        </div>
+    </div>
+</div>
+<script>
 const myArt = [
     { src: 'images/c1c2_front.png', name: 'c1 and c2 ref', tags: ['character', 'concept'] },
     { src: 'images/11_ghost_jewel_big_green_apple.png', name: 'C11 and Jewel Fanart', tags: ['character'] },
@@ -38,3 +289,83 @@ const myArt = [
     { src: 'images/shipconcept.png', name: 'Ship Concept', tags: ['background', 'concept'] },
     { src: 'images/tank_bg.png', name: 'Tank', tags: ['background'] }
 ];
+
+const gallery=document.getElementById('gallery');
+const lbWrap=document.getElementById('lb-wrap');
+const lbImg=document.getElementById('lb-img');
+const lbTitle=document.getElementById('lb-title');
+const lbPills=document.getElementById('lb-pill-box');
+const cnt=document.getElementById('count-badge');
+let activeFilters = [], filtered=[], idx=0;
+
+function render(){
+    gallery.innerHTML = '';
+    filtered = myArt.filter(item => {
+        if (activeFilters.length === 0) return true;
+        return activeFilters.every(f => item.tags.includes(f));
+    });
+    cnt.textContent = filtered.length + ' PIECES REVEALED';
+    
+    filtered.forEach((w,i)=>{
+        const c=document.createElement('div');
+        c.className='card';
+        c.innerHTML=`<div class="card-content">
+            <img src="${w.src}" alt="${w.name}">
+            <div class="card-overlay"><div class="card-title">${w.name}</div></div>
+        </div>`;
+        c.addEventListener('click',()=>openLb(i));
+        gallery.appendChild(c);
+    });
+}
+
+function openLb(i){
+    idx=i; const w=filtered[i];
+    lbImg.src=w.src; lbTitle.textContent=w.name;
+    lbPills.innerHTML = w.tags.map(t => `<span class="pill tag-${t}">${t}</span>`).join('');
+    lbWrap.classList.add('open');
+    document.body.style.overflow = 'hidden'; 
+}
+
+function closeLb(){
+    lbWrap.classList.remove('open');
+    document.body.style.overflow = 'auto'; 
+}
+
+lbWrap.addEventListener('click', (e) => { if (e.target === lbWrap) closeLb(); });
+document.getElementById('lb-close').addEventListener('click',closeLb);
+document.getElementById('lb-prev').addEventListener('click',(e)=>{ e.stopPropagation(); idx=(idx-1+filtered.length)%filtered.length; openLb(idx); });
+document.getElementById('lb-next').addEventListener('click',(e)=>{ e.stopPropagation(); idx=(idx+1)%filtered.length; openLb(idx); });
+
+document.addEventListener('keydown', (e) => {
+    if (!lbWrap.classList.contains('open')) return;
+    if (e.key === "Escape") closeLb();
+    if (e.key === "ArrowLeft") { idx=(idx-1+filtered.length)%filtered.length; openLb(idx); }
+    if (e.key === "ArrowRight") { idx=(idx+1)%filtered.length; openLb(idx); }
+});
+
+document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const f = btn.dataset.filter;
+        if (f === 'all') {
+            activeFilters = [];
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        } else {
+            document.querySelector('[data-filter="all"]').classList.remove('active');
+            if (activeFilters.includes(f)) {
+                activeFilters = activeFilters.filter(item => item !== f);
+                btn.classList.remove('active');
+            } else {
+                activeFilters.push(f);
+                btn.classList.add('active');
+            }
+            if (activeFilters.length === 0) document.querySelector('[data-filter="all"]').classList.add('active');
+        }
+        render();
+    });
+});
+
+render();
+</script>
+</body>
+</html>
