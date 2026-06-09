@@ -7,14 +7,14 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Fredoka+One&display=swap" rel="stylesheet">
 <style>
-/* --- CYBER DARK THEME VARIABLES --- */
+/* --- CYBER DARK THEME --- */
 :root {
     --bg: #0a0a0a;
     --card-bg: #161616;
     --accent: #ff6b6b;
     --cyan: #00f3ff;
     --text: var(--cyan);
-    --subtext: #555;
+    --subtext: #444;
     --char: #e6a800;
     --env: #00a87a;
     --con: #7c5fe6;
@@ -24,7 +24,6 @@
     --skeleton: #1a1a1a;
 }
 
-/* --- RESET & BASE --- */
 *{margin:0;padding:0;box-sizing:border-box}
 body {
     font-family: 'Nunito', sans-serif;
@@ -47,7 +46,7 @@ header { padding: 6rem 2rem 3rem; text-align: center; }
     font-size: 0.85rem; 
     font-weight: 800; 
     letter-spacing: 0.3em; 
-    color: #444; 
+    color: var(--subtext); 
     text-transform: uppercase;
     margin-top: 10px;
 }
@@ -66,28 +65,39 @@ header { padding: 6rem 2rem 3rem; text-align: center; }
 }
 .filter-btn:hover { border-color: var(--cyan); color: var(--cyan); transform: translateY(-2px); }
 .filter-btn.active { background: var(--cyan); color: #000; border-color: var(--cyan); box-shadow: 0 0 15px rgba(0, 243, 255, 0.3); }
+.filter-btn.active[data-filter="character"] { background: var(--char); border-color: var(--char); color: #fff; }
+.filter-btn.active[data-filter="background"] { background: var(--env); border-color: var(--env); color: #fff; }
+.filter-btn.active[data-filter="concept"] { background: var(--con); border-color: var(--con); color: #fff; }
 
-/* Category Active States */
-.filter-btn.active[data-filter="character"] { background: var(--char); border-color: var(--char); color: #fff; box-shadow: 0 0 15px rgba(230, 168, 0, 0.3); }
-.filter-btn.active[data-filter="background"] { background: var(--env); border-color: var(--env); color: #fff; box-shadow: 0 0 15px rgba(0, 168, 122, 0.3); }
-.filter-btn.active[data-filter="concept"] { background: var(--con); border-color: var(--con); color: #fff; box-shadow: 0 0 15px rgba(124, 95, 230, 0.3); }
-
-/* --- MASONRY GALLERY --- */
+/* --- HORIZONTAL MASONRY SYSTEM --- */
 .gallery-container { max-width: 1450px; margin: 0 auto; padding: 0 2rem 5rem; }
-.gallery { columns: 3; column-gap: 2.5rem; }
-@media (max-width: 1100px) { .gallery { columns: 2; } }
-@media (max-width: 700px) { .gallery { columns: 1; } }
 
+/* We use a flexbox wrapper to hold 3 columns side-by-side */
+.gallery-wrapper {
+    display: flex;
+    align-items: flex-start;
+    gap: 2.5rem;
+}
+
+.gallery-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+}
+
+@media (max-width: 1100px) { .gallery-wrapper { gap: 1.5rem; } .gallery-col { gap: 1.5rem; } }
+@media (max-width: 800px) { .gallery-wrapper { flex-direction: column; } }
+
+/* --- CARD STYLES --- */
 .card {
-    break-inside: avoid-column;
-    margin-bottom: 2.5rem;
     position: relative;
     cursor: pointer;
     border-radius: 20px;
     background: var(--card-bg);
     box-shadow: 0 10px 30px var(--card-shadow);
     transition: box-shadow 0.4s ease;
-    min-height: 200px;
+    min-height: 150px;
 }
 
 .card-content {
@@ -102,7 +112,6 @@ header { padding: 6rem 2rem 3rem; text-align: center; }
     width: 100%; display: block;
     opacity: 0;
     transition: opacity 0.8s ease, transform 0.8s ease;
-    will-change: opacity, transform;
 }
 .card img.loaded { opacity: 1; }
 
@@ -113,7 +122,7 @@ header { padding: 6rem 2rem 3rem; text-align: center; }
 .card-overlay {
     position: absolute; inset: 0;
     background: linear-gradient(transparent, rgba(0,0,0,0.9));
-    display: flex; align-items: flex-end; padding: 2rem;
+    display: flex; align-items: flex-end; padding: 1.5rem;
     opacity: 0; transition: opacity 0.4s ease; pointer-events: none;
 }
 .card:hover .card-overlay { opacity: 1; }
@@ -129,22 +138,19 @@ header { padding: 6rem 2rem 3rem; text-align: center; }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
 .lb-box { max-width: 1200px; width: 100%; display: flex; flex-direction: column; align-items: center; }
-.lb-img-container { background: #000; border-radius: 15px; overflow: hidden; margin-bottom: 1.5rem; border: 1px solid #222; box-shadow: 0 0 40px rgba(0,0,0,0.5); }
+.lb-img-container { background: #000; border-radius: 15px; overflow: hidden; margin-bottom: 1.5rem; border: 1px solid #222; }
 .lb-img-container img { max-width: 100%; max-height: 72vh; display: block; }
 .lb-name { color: var(--cyan); font-family: 'Fredoka One', cursive; font-size: 2.5rem; margin-bottom: 0.5rem; text-align: center; text-shadow: 0 0 20px var(--cyan); }
-
 .lb-nav { display: flex; gap: 15px; margin-top: 1rem; }
-.btn { border: none; padding: 0.9rem 2.2rem; border-radius: 50px; font-weight: 800; cursor: pointer; transition: 0.3s; font-size: 0.8rem; letter-spacing: 0.1em; }
-.btn-main { background: var(--cyan); color: #000; box-shadow: 0 0 15px rgba(0, 243, 255, 0.2); }
+.btn { border: none; padding: 0.9rem 2.2rem; border-radius: 50px; font-weight: 800; cursor: pointer; transition: 0.3s; font-size: 0.8rem; }
+.btn-main { background: var(--cyan); color: #000; }
 .btn-close { background: var(--accent); color: #fff; }
-.btn:hover { transform: scale(1.05); filter: brightness(1.1); }
-
 .pill-container { display: flex; gap: 10px; margin-bottom: 1rem; }
-.pill { padding: 5px 15px; border-radius: 20px; color: #fff; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; }
+.pill { padding: 5px 15px; border-radius: 20px; color: #fff; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; }
 .tag-character { background: var(--char); }
 .tag-background { background: var(--env); }
 .tag-concept { background: var(--con); }
-.count-badge { text-align: center; font-weight: 800; color: #333; font-size: 0.75rem; margin-bottom: 3rem; letter-spacing: 0.2em; }
+.count-badge { text-align: center; font-weight: 800; color: #222; font-size: 0.75rem; margin-bottom: 3rem; letter-spacing: 0.2em; }
 </style>
 </head>
 <body>
@@ -161,13 +167,14 @@ header { padding: 6rem 2rem 3rem; text-align: center; }
     <button class="filter-btn" data-filter="concept">Concepts</button>
 </div>
 
-<div class="count-badge" id="count-badge">DATA LOADING...</div>
+<div class="count-badge" id="count-badge">COLLECTION</div>
 
 <div class="gallery-container">
-    <div class="gallery" id="gallery"></div>
+    <div class="gallery-wrapper" id="gallery-wrapper">
+        <!-- Columns will be injected here by JS -->
+    </div>
 </div>
 
-<!-- LIGHTBOX -->
 <div class="lb-wrap" id="lb-wrap">
     <div class="lb-box">
         <div class="lb-img-container"><img id="lb-img" src="" alt=""></div>
@@ -182,8 +189,6 @@ header { padding: 6rem 2rem 3rem; text-align: center; }
 </div>
 
 <script>
-// --- ART DATA ---
-// Add 'rendered' tag to any image to push it to the TOP of the gallery
 const myArt = [
     { src: 'images/c1c2_front.png', name: 'c1 and c2 ref', tags: ['character', 'concept', 'rendered'] },
     { src: 'images/11_ghost_jewel_big_green_apple.png', name: 'C11 and Jewel Fanart', tags: ['character', 'rendered'] },
@@ -225,7 +230,7 @@ const myArt = [
     { src: 'images/tank_bg.png', name: 'Tank', tags: ['background', 'rendered'] }
 ];
 
-const gallery=document.getElementById('gallery');
+const wrapper = document.getElementById('gallery-wrapper');
 const lbWrap=document.getElementById('lb-wrap');
 const lbImg=document.getElementById('lb-img');
 const lbTitle=document.getElementById('lb-title');
@@ -234,47 +239,46 @@ const cnt=document.getElementById('count-badge');
 let activeFilters = [], filtered=[], idx=0;
 
 function render(){
-    gallery.innerHTML = '';
+    wrapper.innerHTML = '';
     
-    // 1. Filter items based on selected category
+    // 1. Filter
     filtered = myArt.filter(item => {
         if (activeFilters.length === 0) return true;
         return activeFilters.every(f => item.tags.includes(f));
     });
 
-    // 2. Sort items so 'rendered' tag comes first
-    filtered.sort((a, b) => {
-        const aRen = a.tags.includes('rendered');
-        const bRen = b.tags.includes('rendered');
-        if (aRen && !bRen) return -1;
-        if (!aRen && bRen) return 1;
-        return 0;
-    });
+    // 2. Sort 'rendered' first
+    filtered.sort((a, b) => (b.tags.includes('rendered') - a.tags.includes('rendered')));
 
     cnt.textContent = filtered.length + ' PIECES REVEALED';
     
-    filtered.forEach((w,i)=>{
-        const c=document.createElement('div');
-        c.className='card';
-        c.innerHTML=`<div class="card-content">
+    // 3. Create 3 Columns for Desktop distribution
+    const numCols = window.innerWidth > 800 ? 3 : 1;
+    const cols = [];
+    for(let i=0; i<numCols; i++) {
+        const colDiv = document.createElement('div');
+        colDiv.className = 'gallery-col';
+        wrapper.appendChild(colDiv);
+        cols.push(colDiv);
+    }
+
+    // 4. Distribute items horizontally (0->Col1, 1->Col2, 2->Col3)
+    filtered.forEach((w, i) => {
+        const c = document.createElement('div');
+        c.className = 'card';
+        c.innerHTML = `<div class="card-content">
             <img src="${w.src}" alt="${w.name}" onload="this.classList.add('loaded')">
             <div class="card-overlay"><div class="card-title">${w.name}</div></div>
         </div>`;
         c.addEventListener('click',()=>openLb(i));
-        gallery.appendChild(c);
+        cols[i % numCols].appendChild(c); // This is the horizontal deal logic
     });
 }
 
 function openLb(i){
     idx=i; const w=filtered[i];
     lbImg.src=w.src; lbTitle.textContent=w.name;
-    
-    // Hidden Tag Check: We filter out 'rendered' so it doesn't show up as a pill
-    lbPills.innerHTML = w.tags
-        .filter(t => t !== 'rendered')
-        .map(t => `<span class="pill tag-${t}">${t}</span>`)
-        .join('');
-
+    lbPills.innerHTML = w.tags.filter(t => t !== 'rendered').map(t => `<span class="pill tag-${t}">${t}</span>`).join('');
     lbWrap.classList.add('open');
     document.body.style.overflow = 'hidden'; 
 }
@@ -314,6 +318,8 @@ document.querySelectorAll('.filter-btn').forEach(btn => {
     });
 });
 
+// Re-render on resize to switch between 1 and 3 column logic
+window.addEventListener('resize', render);
 render();
 </script>
 </body>
