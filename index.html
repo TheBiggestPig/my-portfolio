@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>James Aaron Balan — 2D Artist Portfolio</title>
+<title>BigOne — 2D Artist Portfolio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Fredoka+One&display=swap" rel="stylesheet">
 <style>
@@ -21,17 +21,19 @@
     --card-shadow: rgba(0,0,0,0.06);
     --card-shadow-hover: rgba(0,0,0,0.12);
     --cyan: #00f3ff;
+    --trans: 0.2s ease;
+    --skeleton: #eee;
 }
 
-/* DARK MODE - CYBER CYAN THEME */
 body.dark-mode {
     --bg: #0a0a0a;
     --card-bg: #161616;
-    --text: var(--cyan); /* All primary text turns Cyber Cyan */
+    --text: var(--cyan); 
     --subtext: #444;
     --filter-bar: rgba(10, 10, 10, 0.85);
     --card-shadow: rgba(0, 243, 255, 0.05);
     --card-shadow-hover: rgba(0, 243, 255, 0.15);
+    --skeleton: #222;
 }
 
 /* --- RESET & BASE --- */
@@ -42,86 +44,52 @@ body {
     color: var(--text);
     line-height: 1.6;
     overflow-x: hidden;
-    transition: background-color 0.4s ease, color 0.4s ease;
+    transition: background-color var(--trans), color var(--trans);
 }
 
 /* --- IPHONE STYLE TOGGLE --- */
 .theme-switch-wrapper {
-    position: fixed;
-    top: 25px;
-    right: 25px;
-    display: flex;
-    align-items: center;
-    z-index: 5000;
+    position: fixed; top: 25px; right: 25px;
+    display: flex; align-items: center; z-index: 5000;
 }
-.theme-switch {
-    display: inline-block;
-    height: 26px;
-    position: relative;
-    width: 50px;
-}
+.theme-switch { display: inline-block; height: 26px; position: relative; width: 50px; }
 .theme-switch input { display:none; }
 .slider {
-    background-color: #ccc;
-    bottom: 0;
-    cursor: pointer;
-    left: 0;
-    position: absolute;
-    right: 0;
-    top: 0;
-    transition: .4s;
-    border-radius: 34px;
+    background-color: #ccc; bottom: 0; cursor: pointer; left: 0; position: absolute; right: 0; top: 0;
+    transition: var(--trans); border-radius: 34px;
 }
 .slider:before {
-    background-color: #fff;
-    bottom: 4px;
-    content: "";
-    height: 18px;
-    left: 4px;
-    position: absolute;
-    transition: .4s;
-    width: 18px;
-    border-radius: 50%;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    background-color: #fff; bottom: 4px; content: ""; height: 18px; left: 4px; position: absolute;
+    transition: var(--trans); width: 18px; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 input:checked + .slider { background-color: var(--cyan); }
 input:checked + .slider:before { transform: translateX(24px); }
 
 header { padding: 5rem 2rem 2rem; text-align: center; }
-.logo { 
-    font-family: 'Fredoka One', cursive; 
-    font-size: 3.8rem; 
-    letter-spacing: -2px; 
-    color: var(--text); 
-    transition: color 0.4s ease;
-    text-shadow: body.dark-mode ? 0 0 10px var(--cyan) : none;
-}
+.logo { font-family: 'Fredoka One', cursive; font-size: 3.8rem; letter-spacing: -2px; color: var(--text); transition: color var(--trans); }
 .logo span { color: var(--accent); }
-.tagline { font-size: 0.85rem; font-weight: 800; letter-spacing: 0.3em; color: var(--subtext); text-transform: uppercase; }
+.tagline { font-size: 0.85rem; font-weight: 800; letter-spacing: 0.3em; color: var(--subtext); text-transform: uppercase; transition: color var(--trans); }
 
 /* --- FILTERS --- */
 .filter-row {
     display: flex; justify-content: center; gap: 10px; padding: 2rem; flex-wrap: wrap;
     position: sticky; top: 0; z-index: 1000;
-    background: var(--filter-bar); 
-    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    background: var(--filter-bar); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    transition: background-color var(--trans);
 }
 .filter-btn {
-    border: none; padding: 0.7rem 1.5rem; border-radius: 50px; 
-    background: var(--card-bg); color: var(--text);
+    border: none; padding: 0.7rem 1.5rem; border-radius: 50px; background: var(--card-bg); color: var(--text);
     font-weight: 800; font-size: 0.75rem; cursor: pointer; text-transform: uppercase;
-    transition: all 0.3s ease; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    border: 1px solid transparent;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05); border: 1px solid transparent;
+    transition: background-color var(--trans), color var(--trans), transform 0.2s ease, border-color var(--trans);
 }
 body.dark-mode .filter-btn { border-color: #333; }
-.filter-btn:hover { transform: translateY(-2px); border-color: var(--cyan); }
 .filter-btn.active { background: var(--text); color: var(--bg); }
-/* Custom Category Colors stay consistent */
 .filter-btn.active[data-filter="character"] { background: var(--char); color: #fff; }
 .filter-btn.active[data-filter="background"] { background: var(--env); color: #fff; }
 .filter-btn.active[data-filter="concept"] { background: var(--con); color: #fff; }
 
-/* --- MASONRY GALLERY --- */
+/* --- GALLERY --- */
 .gallery-container { max-width: 1400px; margin: 0 auto; padding: 0 2rem 5rem; }
 .gallery { columns: 3; column-gap: 2rem; }
 @media (max-width: 1000px) { .gallery { columns: 2; } }
@@ -129,32 +97,39 @@ body.dark-mode .filter-btn { border-color: #333; }
 
 .card {
     break-inside: avoid-column;
-    margin-bottom: 2.5rem;
+    margin-bottom: 2rem;
     position: relative;
     cursor: pointer;
     border-radius: 20px;
-    isolation: isolate; 
     background: var(--card-bg);
     box-shadow: 0 10px 30px var(--card-shadow);
-    transition: box-shadow 0.4s ease;
+    transition: box-shadow var(--trans), background-color var(--trans);
+    /* Prevent layout jump */
+    min-height: 200px; 
 }
 
 .card-content {
     position: relative;
     border-radius: 20px;
     overflow: hidden;
-    contain: paint; 
-    background: var(--card-bg);
+    background: var(--skeleton); /* Skeleton background while loading */
     transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
+/* IMAGE LOADING STYLES */
 .card img {
     width: 100%; display: block;
-    transition: transform 0.6s ease;
+    opacity: 0; /* Hidden initially */
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    will-change: opacity, transform;
+}
+.card img.loaded {
+    opacity: 1; /* Show when loaded */
 }
 
 .card:hover { box-shadow: 0 20px 40px var(--card-shadow-hover); }
 .card:hover .card-content { transform: translateY(-8px); }
+.card:hover img { transform: scale(1.04); }
 
 .card-overlay {
     position: absolute; inset: 0;
@@ -165,7 +140,7 @@ body.dark-mode .filter-btn { border-color: #333; }
 .card:hover .card-overlay { opacity: 1; }
 .card-title { color: var(--cyan); font-family: 'Fredoka One', cursive; font-size: 1.1rem; text-shadow: 0 0 8px rgba(0,243,255,0.5); }
 
-/* --- LIGHTBOX POPUP --- */
+/* --- LIGHTBOX --- */
 .lb-wrap {
     position: fixed; inset: 0; background: rgba(5, 5, 5, 0.98);
     display: none; z-index: 6000; align-items: center; justify-content: center;
@@ -178,9 +153,8 @@ body.dark-mode .filter-btn { border-color: #333; }
 .lb-name { color: var(--cyan); font-family: 'Fredoka One', cursive; font-size: 2.2rem; margin-bottom: 0.5rem; text-align: center; text-shadow: 0 0 15px var(--cyan); }
 .lb-nav { display: flex; gap: 12px; }
 .btn { border: none; padding: 0.8rem 2rem; border-radius: 50px; font-weight: 800; cursor: pointer; transition: 0.2s; }
-.btn-main { background: var(--cyan); color: #000; box-shadow: 0 0 10px rgba(0,243,255,0.3); }
+.btn-main { background: var(--cyan); color: #000; }
 .btn-close { background: var(--accent); color: #fff; }
-.btn:hover { transform: scale(1.05); filter: brightness(1.1); }
 
 .pill-container { display: flex; gap: 8px; margin-bottom: 1.5rem; }
 .pill { padding: 4px 12px; border-radius: 20px; color: #fff; font-size: 0.65rem; font-weight: 800; text-transform: uppercase; }
@@ -192,7 +166,6 @@ body.dark-mode .filter-btn { border-color: #333; }
 </head>
 <body>
 
-<!-- THEME TOGGLE SWITCH -->
 <div class="theme-switch-wrapper">
     <label class="theme-switch" for="checkbox">
         <input type="checkbox" id="checkbox" />
@@ -201,7 +174,7 @@ body.dark-mode .filter-btn { border-color: #333; }
 </div>
 
 <header>
-    <div class="logo">James Aaron Balan<span>.</span></div>
+    <div class="logo">BigOne<span>.</span></div>
     <div class="tagline">2D Artist &bull; Character Designer &bull; Concept Artist</div>
 </header>
 
@@ -218,7 +191,6 @@ body.dark-mode .filter-btn { border-color: #333; }
     <div class="gallery" id="gallery"></div>
 </div>
 
-<!-- LIGHTBOX -->
 <div class="lb-wrap" id="lb-wrap">
     <div class="lb-box">
         <div class="lb-img-container"><img id="lb-img" src="" alt=""></div>
@@ -233,31 +205,16 @@ body.dark-mode .filter-btn { border-color: #333; }
 </div>
 
 <script>
-// --- THEME LOGIC ---
 const toggleSwitch = document.querySelector('.theme-switch input[type="checkbox"]');
 const body = document.body;
 
 function switchTheme(e) {
-    if (e.target.checked) {
-        body.classList.add('dark-mode');
-        localStorage.setItem('theme', 'dark');
-    } else {
-        body.classList.remove('dark-mode');
-        localStorage.setItem('theme', 'light');
-    }    
+    if (e.target.checked) { body.classList.add('dark-mode'); localStorage.setItem('theme', 'dark'); } 
+    else { body.classList.remove('dark-mode'); localStorage.setItem('theme', 'light'); }    
 }
-
 toggleSwitch.addEventListener('change', switchTheme, false);
+if (localStorage.getItem('theme') === 'dark') { toggleSwitch.checked = true; body.classList.add('dark-mode'); }
 
-const currentTheme = localStorage.getItem('theme');
-if (currentTheme) {
-    if (currentTheme === 'dark') {
-        toggleSwitch.checked = true;
-        body.classList.add('dark-mode');
-    }
-}
-
-// --- ART DATA ---
 const myArt = [
     { src: 'images/c1c2_front.png', name: 'c1 and c2 ref', tags: ['character', 'concept'] },
     { src: 'images/11_ghost_jewel_big_green_apple.png', name: 'C11 and Jewel Fanart', tags: ['character'] },
@@ -318,8 +275,9 @@ function render(){
     filtered.forEach((w,i)=>{
         const c=document.createElement('div');
         c.className='card';
+        // The image has a listener to add "loaded" class once ready
         c.innerHTML=`<div class="card-content">
-            <img src="${w.src}" alt="${w.name}">
+            <img src="${w.src}" alt="${w.name}" onload="this.classList.add('loaded')">
             <div class="card-overlay"><div class="card-title">${w.name}</div></div>
         </div>`;
         c.addEventListener('click',()=>openLb(i));
@@ -335,11 +293,7 @@ function openLb(i){
     document.body.style.overflow = 'hidden'; 
 }
 
-function closeLb(){
-    lbWrap.classList.remove('open');
-    document.body.style.overflow = 'auto'; 
-}
-
+function closeLb(){ lbWrap.classList.remove('open'); document.body.style.overflow = 'auto'; }
 lbWrap.addEventListener('click', (e) => { if (e.target === lbWrap) closeLb(); });
 document.getElementById('lb-close').addEventListener('click',closeLb);
 document.getElementById('lb-prev').addEventListener('click',(e)=>{ e.stopPropagation(); idx=(idx-1+filtered.length)%filtered.length; openLb(idx); });
