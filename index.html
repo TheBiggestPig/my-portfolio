@@ -3,37 +3,25 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>James Aaron Balan — 2D Artist Portfolio</title>
+<title>BigOne — 2D Artist Portfolio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Fredoka+One&display=swap" rel="stylesheet">
 <style>
-/* --- THEME VARIABLES --- */
+/* --- CYBER DARK THEME VARIABLES --- */
 :root {
-    --bg: #f9f8f4;
-    --card-bg: #ffffff;
+    --bg: #0a0a0a;
+    --card-bg: #161616;
     --accent: #ff6b6b;
-    --text: #1e272e;
-    --subtext: #a0a0a0;
+    --cyan: #00f3ff;
+    --text: var(--cyan);
+    --subtext: #555;
     --char: #e6a800;
     --env: #00a87a;
     --con: #7c5fe6;
-    --filter-bar: rgba(249, 248, 244, 0.8);
-    --card-shadow: rgba(0,0,0,0.06);
-    --card-shadow-hover: rgba(0,0,0,0.12);
-    --cyan: #00f3ff;
-    --trans: 0.2s ease;
-    --skeleton: #eee;
-}
-
-body.dark-mode {
-    --bg: #0a0a0a;
-    --card-bg: #161616;
-    --text: var(--cyan); 
-    --subtext: #444;
-    --filter-bar: rgba(10, 10, 10, 0.85);
+    --filter-bar: rgba(10, 10, 10, 0.9);
     --card-shadow: rgba(0, 243, 255, 0.05);
-    --card-shadow-hover: rgba(0, 243, 255, 0.15);
-    --skeleton: #222;
+    --card-shadow-hover: rgba(0, 243, 255, 0.2);
+    --skeleton: #1a1a1a;
 }
 
 /* --- RESET & BASE --- */
@@ -44,137 +32,125 @@ body {
     color: var(--text);
     line-height: 1.6;
     overflow-x: hidden;
-    transition: background-color var(--trans), color var(--trans);
 }
 
-/* --- IPHONE STYLE TOGGLE --- */
-.theme-switch-wrapper {
-    position: fixed; top: 25px; right: 25px;
-    display: flex; align-items: center; z-index: 5000;
+header { padding: 6rem 2rem 3rem; text-align: center; }
+.logo { 
+    font-family: 'Fredoka One', cursive; 
+    font-size: 4rem; 
+    letter-spacing: -2px; 
+    color: var(--cyan);
+    text-shadow: 0 0 15px rgba(0, 243, 255, 0.4);
 }
-.theme-switch { display: inline-block; height: 26px; position: relative; width: 50px; }
-.theme-switch input { display:none; }
-.slider {
-    background-color: #ccc; bottom: 0; cursor: pointer; left: 0; position: absolute; right: 0; top: 0;
-    transition: var(--trans); border-radius: 34px;
+.logo span { color: var(--accent); text-shadow: none; }
+.tagline { 
+    font-size: 0.85rem; 
+    font-weight: 800; 
+    letter-spacing: 0.3em; 
+    color: #444; 
+    text-transform: uppercase;
+    margin-top: 10px;
 }
-.slider:before {
-    background-color: #fff; bottom: 4px; content: ""; height: 18px; left: 4px; position: absolute;
-    transition: var(--trans); width: 18px; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-}
-input:checked + .slider { background-color: var(--cyan); }
-input:checked + .slider:before { transform: translateX(24px); }
-
-header { padding: 5rem 2rem 2rem; text-align: center; }
-.logo { font-family: 'Fredoka One', cursive; font-size: 3.8rem; letter-spacing: -2px; color: var(--text); transition: color var(--trans); }
-.logo span { color: var(--accent); }
-.tagline { font-size: 0.85rem; font-weight: 800; letter-spacing: 0.3em; color: var(--subtext); text-transform: uppercase; transition: color var(--trans); }
 
 /* --- FILTERS --- */
 .filter-row {
-    display: flex; justify-content: center; gap: 10px; padding: 2rem; flex-wrap: wrap;
+    display: flex; justify-content: center; gap: 12px; padding: 2rem; flex-wrap: wrap;
     position: sticky; top: 0; z-index: 1000;
-    background: var(--filter-bar); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-    transition: background-color var(--trans);
+    background: var(--filter-bar); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
 }
 .filter-btn {
-    border: none; padding: 0.7rem 1.5rem; border-radius: 50px; background: var(--card-bg); color: var(--text);
+    border: 1px solid #222; padding: 0.7rem 1.6rem; border-radius: 50px; 
+    background: #111; color: #777;
     font-weight: 800; font-size: 0.75rem; cursor: pointer; text-transform: uppercase;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05); border: 1px solid transparent;
-    transition: background-color var(--trans), color var(--trans), transform 0.2s ease, border-color var(--trans);
+    transition: all 0.3s ease;
 }
-body.dark-mode .filter-btn { border-color: #333; }
-.filter-btn.active { background: var(--text); color: var(--bg); }
-.filter-btn.active[data-filter="character"] { background: var(--char); color: #fff; }
-.filter-btn.active[data-filter="background"] { background: var(--env); color: #fff; }
-.filter-btn.active[data-filter="concept"] { background: var(--con); color: #fff; }
+.filter-btn:hover { border-color: var(--cyan); color: var(--cyan); transform: translateY(-2px); }
+.filter-btn.active { background: var(--cyan); color: #000; border-color: var(--cyan); box-shadow: 0 0 15px rgba(0, 243, 255, 0.3); }
 
-/* --- GALLERY --- */
-.gallery-container { max-width: 1400px; margin: 0 auto; padding: 0 2rem 5rem; }
-.gallery { columns: 3; column-gap: 2rem; }
-@media (max-width: 1000px) { .gallery { columns: 2; } }
-@media (max-width: 600px) { .gallery { columns: 1; } }
+/* Category Active States */
+.filter-btn.active[data-filter="character"] { background: var(--char); border-color: var(--char); color: #fff; box-shadow: 0 0 15px rgba(230, 168, 0, 0.3); }
+.filter-btn.active[data-filter="background"] { background: var(--env); border-color: var(--env); color: #fff; box-shadow: 0 0 15px rgba(0, 168, 122, 0.3); }
+.filter-btn.active[data-filter="concept"] { background: var(--con); border-color: var(--con); color: #fff; box-shadow: 0 0 15px rgba(124, 95, 230, 0.3); }
+
+/* --- MASONRY GALLERY --- */
+.gallery-container { max-width: 1450px; margin: 0 auto; padding: 0 2rem 5rem; }
+.gallery { columns: 3; column-gap: 2.5rem; }
+@media (max-width: 1100px) { .gallery { columns: 2; } }
+@media (max-width: 700px) { .gallery { columns: 1; } }
 
 .card {
     break-inside: avoid-column;
-    margin-bottom: 2rem;
+    margin-bottom: 2.5rem;
     position: relative;
     cursor: pointer;
     border-radius: 20px;
     background: var(--card-bg);
     box-shadow: 0 10px 30px var(--card-shadow);
-    transition: box-shadow var(--trans), background-color var(--trans);
-    /* Prevent layout jump */
-    min-height: 200px; 
+    transition: box-shadow 0.4s ease;
+    min-height: 200px;
 }
 
 .card-content {
     position: relative;
     border-radius: 20px;
     overflow: hidden;
-    background: var(--skeleton); /* Skeleton background while loading */
-    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    background: var(--skeleton);
+    transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-/* IMAGE LOADING STYLES */
 .card img {
     width: 100%; display: block;
-    opacity: 0; /* Hidden initially */
-    transition: opacity 0.6s ease, transform 0.6s ease;
+    opacity: 0;
+    transition: opacity 0.8s ease, transform 0.8s ease;
     will-change: opacity, transform;
 }
-.card img.loaded {
-    opacity: 1; /* Show when loaded */
-}
+.card img.loaded { opacity: 1; }
 
-.card:hover { box-shadow: 0 20px 40px var(--card-shadow-hover); }
-.card:hover .card-content { transform: translateY(-8px); }
-.card:hover img { transform: scale(1.04); }
+.card:hover { box-shadow: 0 20px 50px var(--card-shadow-hover); }
+.card:hover .card-content { transform: translateY(-10px); }
+.card:hover img { transform: scale(1.05); }
 
 .card-overlay {
     position: absolute; inset: 0;
-    background: linear-gradient(transparent, rgba(0,0,0,0.85));
-    display: flex; align-items: flex-end; padding: 1.5rem;
-    opacity: 0; transition: opacity 0.3s ease; pointer-events: none;
+    background: linear-gradient(transparent, rgba(0,0,0,0.9));
+    display: flex; align-items: flex-end; padding: 2rem;
+    opacity: 0; transition: opacity 0.4s ease; pointer-events: none;
 }
 .card:hover .card-overlay { opacity: 1; }
-.card-title { color: var(--cyan); font-family: 'Fredoka One', cursive; font-size: 1.1rem; text-shadow: 0 0 8px rgba(0,243,255,0.5); }
+.card-title { color: var(--cyan); font-family: 'Fredoka One', cursive; font-size: 1.2rem; text-shadow: 0 0 10px rgba(0,243,255,0.6); }
 
 /* --- LIGHTBOX --- */
 .lb-wrap {
-    position: fixed; inset: 0; background: rgba(5, 5, 5, 0.98);
+    position: fixed; inset: 0; background: rgba(2, 2, 2, 0.98);
     display: none; z-index: 6000; align-items: center; justify-content: center;
-    backdrop-filter: blur(15px); padding: 1rem;
+    backdrop-filter: blur(20px); padding: 1.5rem;
 }
-.lb-wrap.open { display: flex; }
-.lb-box { max-width: 1100px; width: 100%; display: flex; flex-direction: column; align-items: center; }
-.lb-img-container { background: #000; border-radius: 12px; overflow: hidden; margin-bottom: 1rem; border: 1px solid #222; }
-.lb-img-container img { max-width: 100%; max-height: 70vh; display: block; }
-.lb-name { color: var(--cyan); font-family: 'Fredoka One', cursive; font-size: 2.2rem; margin-bottom: 0.5rem; text-align: center; text-shadow: 0 0 15px var(--cyan); }
-.lb-nav { display: flex; gap: 12px; }
-.btn { border: none; padding: 0.8rem 2rem; border-radius: 50px; font-weight: 800; cursor: pointer; transition: 0.2s; }
-.btn-main { background: var(--cyan); color: #000; }
-.btn-close { background: var(--accent); color: #fff; }
+.lb-wrap.open { display: flex; animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-.pill-container { display: flex; gap: 8px; margin-bottom: 1.5rem; }
-.pill { padding: 4px 12px; border-radius: 20px; color: #fff; font-size: 0.65rem; font-weight: 800; text-transform: uppercase; }
+.lb-box { max-width: 1200px; width: 100%; display: flex; flex-direction: column; align-items: center; }
+.lb-img-container { background: #000; border-radius: 15px; overflow: hidden; margin-bottom: 1.5rem; border: 1px solid #222; box-shadow: 0 0 40px rgba(0,0,0,0.5); }
+.lb-img-container img { max-width: 100%; max-height: 72vh; display: block; }
+.lb-name { color: var(--cyan); font-family: 'Fredoka One', cursive; font-size: 2.5rem; margin-bottom: 0.5rem; text-align: center; text-shadow: 0 0 20px var(--cyan); }
+
+.lb-nav { display: flex; gap: 15px; margin-top: 1rem; }
+.btn { border: none; padding: 0.9rem 2.2rem; border-radius: 50px; font-weight: 800; cursor: pointer; transition: 0.3s; font-size: 0.8rem; letter-spacing: 0.1em; }
+.btn-main { background: var(--cyan); color: #000; box-shadow: 0 0 15px rgba(0, 243, 255, 0.2); }
+.btn-close { background: var(--accent); color: #fff; }
+.btn:hover { transform: scale(1.05); filter: brightness(1.1); }
+
+.pill-container { display: flex; gap: 10px; margin-bottom: 1rem; }
+.pill { padding: 5px 15px; border-radius: 20px; color: #fff; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; }
 .tag-character { background: var(--char); }
 .tag-background { background: var(--env); }
 .tag-concept { background: var(--con); }
-.count-badge { text-align: center; font-weight: 800; color: var(--subtext); font-size: 0.75rem; margin-bottom: 2rem; }
+.count-badge { text-align: center; font-weight: 800; color: #333; font-size: 0.75rem; margin-bottom: 3rem; letter-spacing: 0.2em; }
 </style>
 </head>
 <body>
 
-<div class="theme-switch-wrapper">
-    <label class="theme-switch" for="checkbox">
-        <input type="checkbox" id="checkbox" />
-        <div class="slider"></div>
-    </label>
-</div>
-
 <header>
-    <div class="logo">James Aaron Balan<span>.</span></div>
+    <div class="logo">BigOne<span>.</span></div>
     <div class="tagline">2D Artist &bull; Character Designer &bull; Concept Artist</div>
 </header>
 
@@ -185,40 +161,33 @@ body.dark-mode .filter-btn { border-color: #333; }
     <button class="filter-btn" data-filter="concept">Concepts</button>
 </div>
 
-<div class="count-badge" id="count-badge">COLLECTION</div>
+<div class="count-badge" id="count-badge">DATA LOADING...</div>
 
 <div class="gallery-container">
     <div class="gallery" id="gallery"></div>
 </div>
 
+<!-- LIGHTBOX -->
 <div class="lb-wrap" id="lb-wrap">
     <div class="lb-box">
         <div class="lb-img-container"><img id="lb-img" src="" alt=""></div>
         <div class="lb-name" id="lb-title"></div>
         <div class="pill-container" id="lb-pill-box"></div>
         <div class="lb-nav">
-            <button class="btn btn-main" id="lb-prev">← PREV</button>
+            <button class="btn btn-main" id="lb-prev">PREV</button>
             <button class="btn btn-close" id="lb-close">CLOSE</button>
-            <button class="btn btn-main" id="lb-next">NEXT →</button>
+            <button class="btn btn-main" id="lb-next">NEXT</button>
         </div>
     </div>
 </div>
 
 <script>
-const toggleSwitch = document.querySelector('.theme-switch input[type="checkbox"]');
-const body = document.body;
-
-function switchTheme(e) {
-    if (e.target.checked) { body.classList.add('dark-mode'); localStorage.setItem('theme', 'dark'); } 
-    else { body.classList.remove('dark-mode'); localStorage.setItem('theme', 'light'); }    
-}
-toggleSwitch.addEventListener('change', switchTheme, false);
-if (localStorage.getItem('theme') === 'dark') { toggleSwitch.checked = true; body.classList.add('dark-mode'); }
-
+// --- ART DATA ---
+// Add 'rendered' tag to any image to push it to the TOP of the gallery
 const myArt = [
-    { src: 'images/c1c2_front.png', name: 'c1 and c2 ref', tags: ['character', 'concept'] },
+    { src: 'images/c1c2_front.png', name: 'c1 and c2 ref', tags: ['character', 'concept', 'rendered'] },
     { src: 'images/11_ghost_jewel_big_green_apple.png', name: 'C11 and Jewel Fanart', tags: ['character'] },
-    { src: 'images/c3_monolithic.jpg', name: 'C3 Monolithic', tags: ['character'] },
+    { src: 'images/c3_monolithic.jpg', name: 'C3 Monolithic', tags: ['character', 'rendered'] },
     { src: 'images/c3_old.png', name: 'C3 Old', tags: ['character'] },
     { src: 'images/c3_oldref.png', name: 'C3 Old Ref', tags: ['character', 'concept'] },
     { src: 'images/c3_wired.png', name: 'C3 Wired', tags: ['character'] },
@@ -266,16 +235,27 @@ let activeFilters = [], filtered=[], idx=0;
 
 function render(){
     gallery.innerHTML = '';
+    
+    // 1. Filter items based on selected category
     filtered = myArt.filter(item => {
         if (activeFilters.length === 0) return true;
         return activeFilters.every(f => item.tags.includes(f));
     });
+
+    // 2. Sort items so 'rendered' tag comes first
+    filtered.sort((a, b) => {
+        const aRen = a.tags.includes('rendered');
+        const bRen = b.tags.includes('rendered');
+        if (aRen && !bRen) return -1;
+        if (!aRen && bRen) return 1;
+        return 0;
+    });
+
     cnt.textContent = filtered.length + ' PIECES REVEALED';
     
     filtered.forEach((w,i)=>{
         const c=document.createElement('div');
         c.className='card';
-        // The image has a listener to add "loaded" class once ready
         c.innerHTML=`<div class="card-content">
             <img src="${w.src}" alt="${w.name}" onload="this.classList.add('loaded')">
             <div class="card-overlay"><div class="card-title">${w.name}</div></div>
@@ -288,7 +268,13 @@ function render(){
 function openLb(i){
     idx=i; const w=filtered[i];
     lbImg.src=w.src; lbTitle.textContent=w.name;
-    lbPills.innerHTML = w.tags.map(t => `<span class="pill tag-${t}">${t}</span>`).join('');
+    
+    // Hidden Tag Check: We filter out 'rendered' so it doesn't show up as a pill
+    lbPills.innerHTML = w.tags
+        .filter(t => t !== 'rendered')
+        .map(t => `<span class="pill tag-${t}">${t}</span>`)
+        .join('');
+
     lbWrap.classList.add('open');
     document.body.style.overflow = 'hidden'; 
 }
