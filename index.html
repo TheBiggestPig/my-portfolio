@@ -25,7 +25,7 @@
 }
 
 *{margin:0;padding:0;box-sizing:border-box}
-html { scroll-behavior: smooth; } /* Smooth scroll for About link */
+html { scroll-behavior: smooth; }
 
 body {
     font-family: 'Nunito', sans-serif;
@@ -53,11 +53,11 @@ header { padding: 6rem 2rem 3rem; text-align: center; }
     font-size: 0.7rem;
     letter-spacing: 0.3em;
     border: 1px solid #222;
-    padding: 5px 15px;
+    padding: 5px 18px;
     border-radius: 50px;
     transition: 0.3s;
 }
-.intel-link:hover { color: var(--cyan); border-color: var(--cyan); }
+.intel-link:hover { color: var(--cyan); border-color: var(--cyan); background: rgba(0,243,255,0.05); }
 
 .tagline { 
     font-size: 0.85rem; 
@@ -111,65 +111,58 @@ header { padding: 6rem 2rem 3rem; text-align: center; }
 
 .card-overlay {
     position: absolute; inset: 0; background: linear-gradient(transparent, rgba(0,0,0,0.9));
-    display: flex; align-items: flex-end; padding: 1.5rem; opacity: 0; transition: opacity 0.4s ease;
+    display: flex; align-items: flex-end; padding: 2rem; opacity: 0; transition: opacity 0.4s ease;
 }
 .card:hover .card-overlay { opacity: 1; }
 .card-title { color: var(--cyan); font-family: 'Fredoka One', cursive; font-size: 1.2rem; }
 
-/* --- ABOUT SECTION --- */
+/* --- SIMPLIFIED ABOUT SECTION --- */
 .about-section {
     background: #050505;
     padding: 6rem 2rem;
     border-top: 1px solid #111;
 }
 .about-container {
-    max-width: 1000px;
+    max-width: 1200px;
     margin: 0 auto;
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 4rem;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 3rem;
 }
-@media (max-width: 768px) { .about-container { grid-template-columns: 1fr; gap: 3rem; } }
+@media (max-width: 1000px) { .about-container { grid-template-columns: 1fr; gap: 3rem; } }
 
 .about-header {
     font-family: 'Fredoka One', cursive;
-    font-size: 2rem;
+    font-size: 1.4rem;
     color: var(--cyan);
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.2rem;
     text-transform: uppercase;
-    letter-spacing: 2px;
+    letter-spacing: 1px;
 }
 .about-text {
-    color: #888;
-    font-size: 1.1rem;
+    color: #777;
+    font-size: 1rem;
     line-height: 1.8;
 }
-.contact-list { list-style: none; }
-.contact-item {
+.contact-link {
     background: #111;
     border: 1px solid #222;
-    padding: 1.5rem;
-    border-radius: 15px;
-    margin-bottom: 1rem;
+    padding: 1rem;
+    border-radius: 12px;
+    margin-bottom: 0.8rem;
     transition: 0.3s;
     display: block;
     text-decoration: none;
-    color: var(--cyan);
+    color: #aaa;
+    font-size: 0.9rem;
+    font-weight: 700;
 }
-.contact-item:hover {
+.contact-link:hover {
     border-color: var(--cyan);
-    box-shadow: 0 0 20px rgba(0, 243, 255, 0.1);
-    transform: translateX(10px);
+    color: var(--cyan);
+    transform: translateY(-3px);
 }
-.contact-label {
-    display: block;
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    color: #555;
-    margin-bottom: 5px;
-    font-weight: 800;
-}
-.contact-val { font-weight: 700; font-size: 1.1rem; }
+.social-tag { display: block; font-size: 0.65rem; color: #444; text-transform: uppercase; margin-bottom: 2px; }
 
 /* --- LIGHTBOX --- */
 .lb-wrap {
@@ -198,7 +191,7 @@ header { padding: 6rem 2rem 3rem; text-align: center; }
 
 <header>
     <div class="logo">BigOne<span>.</span></div>
-    <div class="header-nav"><a href="#intel" class="intel-link">ACCESS INTEL</a></div>
+    <div class="header-nav"><a href="#about" class="intel-link">ABOUT</a></div>
     <div class="tagline">2D Artist &bull; Character Designer &bull; Concept Artist</div>
 </header>
 
@@ -215,33 +208,37 @@ header { padding: 6rem 2rem 3rem; text-align: center; }
     <div class="gallery-wrapper" id="gallery-wrapper"></div>
 </div>
 
-<!-- ABOUT / CONTACT SECTION -->
-<section class="about-section" id="intel">
+<!-- SIMPLIFIED FOOTER -->
+<section class="about-section" id="about">
     <div class="about-container">
+        <!-- Section 1 -->
         <div>
-            <h2 class="about-header">Intel Report</h2>
+            <h2 class="about-header">About Me</h2>
             <p class="about-text">
-                BigOne is a specialized 2D Artist focusing on character design and environmental storytelling. 
-                With a passion for cyber-aesthetics and immersive world-building, I translate complex 
-                concepts into high-fidelity visual assets.
+                BigOne is a 2D Concept Artist and Character Designer. I specialize in 
+                creating high-fidelity visual designs for games and stories, 
+                blending cyber-aesthetics with atmospheric world-building.
             </p>
         </div>
+        <!-- Section 2 -->
         <div>
-            <h2 class="about-header">Secure Channels</h2>
-            <div class="contact-list">
-                <a href="mailto:your-email@example.com" class="contact-item">
-                    <span class="contact-label">Email Interface</span>
-                    <span class="contact-val">your-email@example.com</span>
-                </a>
-                <a href="https://artstation.com/your-profile" target="_blank" class="contact-item">
-                    <span class="contact-label">Asset Archive</span>
-                    <span class="contact-val">ArtStation Portfolio</span>
-                </a>
-                <a href="https://instagram.com/your-profile" target="_blank" class="contact-item">
-                    <span class="contact-label">Visual Feed</span>
-                    <span class="contact-val">@InstagramHandle</span>
-                </a>
-            </div>
+            <h2 class="about-header">Contact Me</h2>
+            <a href="mailto:your-email@example.com" class="contact-link">
+                <span class="social-tag">Direct Mail</span>
+                your-email@example.com
+            </a>
+        </div>
+        <!-- Section 3 -->
+        <div>
+            <h2 class="about-header">Socials</h2>
+            <a href="https://artstation.com/" target="_blank" class="contact-link">
+                <span class="social-tag">Gallery</span>
+                ArtStation
+            </a>
+            <a href="https://instagram.com/" target="_blank" class="contact-link">
+                <span class="social-tag">Updates</span>
+                Instagram
+            </a>
         </div>
     </div>
 </section>
