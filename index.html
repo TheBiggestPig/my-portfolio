@@ -72,7 +72,6 @@ header { padding: 6rem 2rem 3rem; text-align: center; }
 /* --- HORIZONTAL MASONRY SYSTEM --- */
 .gallery-container { max-width: 1450px; margin: 0 auto; padding: 0 2rem 5rem; }
 
-/* We use a flexbox wrapper to hold 3 columns side-by-side */
 .gallery-wrapper {
     display: flex;
     align-items: flex-start;
@@ -240,21 +239,21 @@ const lbPills=document.getElementById('lb-pill-box');
 const cnt=document.getElementById('count-badge');
 let activeFilters = [], filtered=[], idx=0;
 
+// FIX: Cache the window width to prevent height-only resizes (mobile address bar) from breaking layout
+let lastWidth = window.innerWidth;
+
 function render(){
     wrapper.innerHTML = '';
     
-    // 1. Filter
     filtered = myArt.filter(item => {
         if (activeFilters.length === 0) return true;
         return activeFilters.every(f => item.tags.includes(f));
     });
 
-    // 2. Sort 'rendered' first
     filtered.sort((a, b) => (b.tags.includes('rendered') - a.tags.includes('rendered')));
 
     cnt.textContent = filtered.length + ' PIECES REVEALED';
     
-    // 3. Create 3 Columns for Desktop distribution
     const numCols = window.innerWidth > 800 ? 3 : 1;
     const cols = [];
     for(let i=0; i<numCols; i++) {
@@ -264,7 +263,6 @@ function render(){
         cols.push(colDiv);
     }
 
-    // 4. Distribute items horizontally (0->Col1, 1->Col2, 2->Col3)
     filtered.forEach((w, i) => {
         const c = document.createElement('div');
         c.className = 'card';
@@ -273,7 +271,7 @@ function render(){
             <div class="card-overlay"><div class="card-title">${w.name}</div></div>
         </div>`;
         c.addEventListener('click',()=>openLb(i));
-        cols[i % numCols].appendChild(c); // This is the horizontal deal logic
+        cols[i % numCols].appendChild(c); 
     });
 }
 
@@ -320,8 +318,15 @@ document.querySelectorAll('.filter-btn').forEach(btn => {
     });
 });
 
-// Re-render on resize to switch between 1 and 3 column logic
-window.addEventListener('resize', render);
+// FIX: Only trigger render if the screen WIDTH changes. 
+// Height changes (address bar) are ignored.
+window.addEventListener('resize', () => {
+    if (window.innerWidth !== lastWidth) {
+        lastWidth = window.innerWidth;
+        render();
+    }
+});
+
 render();
 </script>
 </body>
